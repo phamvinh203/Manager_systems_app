@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/auth/auth_bloc.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
+import 'package:mobile/blocs/attendance/attendance_bloc.dart';
 import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/repositories/employee_repository.dart';
+import 'package:mobile/repositories/attendance_repository.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 
 void main() {
@@ -20,6 +22,7 @@ class MyApp extends StatelessWidget {
       providers: [
         RepositoryProvider(create: (_) => AuthRepository()),
         RepositoryProvider(create: (_) => EmployeeRepository()),
+        RepositoryProvider(create: (_) => AttendanceRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -28,6 +31,9 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => EmployeeBloc(context.read<EmployeeRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => AttendanceBloc(context.read<AttendanceRepository>()),
           ),
         ],
         child: MaterialApp(

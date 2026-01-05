@@ -2,12 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:mobile/models/employee_model.dart';
 import 'package:mobile/models/pagination_model.dart';
 
-enum EmployeeStatus {
-  initial,
-  loading,
-  loaded,
-  error,
-}
+enum EmployeeStatus { initial, loading, loaded, error }
 
 class EmployeeState extends Equatable {
   // screen status
@@ -45,33 +40,32 @@ class EmployeeState extends Equatable {
     return EmployeeState(
       status: status ?? this.status,
       employees: employees ?? this.employees,
-      pagination:
-          clearPagination ? null : (pagination ?? this.pagination),
-      errorMessage:
-          clearError ? null : (errorMessage ?? this.errorMessage),
-      successMessage:
-          clearSuccess ? null : (successMessage ?? this.successMessage),
+      pagination: clearPagination ? null : (pagination ?? this.pagination),
+      errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      successMessage: clearSuccess
+          ? null
+          : (successMessage ?? this.successMessage),
     );
   }
 
   // === Helper Getters ===
-  
+
   bool get isInitial => status == EmployeeStatus.initial;
   bool get isLoading => status == EmployeeStatus.loading;
   bool get isLoaded => status == EmployeeStatus.loaded;
   bool get isError => status == EmployeeStatus.error;
-  
+
   bool get isEmpty => employees.isEmpty;
   bool get isNotEmpty => employees.isNotEmpty;
-  
+
   int get totalEmployees => employees.length;
 
   @override
   List<Object?> get props => [
-        status,
-        employees,
-        pagination,
-        errorMessage,
-        successMessage,
-      ];
+    status,
+    employees,
+    pagination,
+    errorMessage,
+    successMessage,
+  ];
 }

@@ -20,4 +20,10 @@ class ApiUrl {
 
   // DELETE /api/employees/:id - Xóa nhân viên
   static String deleteEmployee(int id) => '${baseUrl}employees/$id';
+
+  // attendance endpoints
+  static const String checkIn = '${baseUrl}attendance/check-in';
+  static const String checkOut = '${baseUrl}attendance/check-out';
+  static const String meAttendance = '${baseUrl}attendance/me';
+  static const String allAttendance = '${baseUrl}attendance';
 }

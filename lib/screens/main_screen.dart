@@ -41,9 +41,10 @@ class _MainScreenState extends State<MainScreen> {
         width: 56,
         height: 56,
         child: FloatingActionButton(
+          heroTag: 'main_fab',
           backgroundColor: const Color(0xFF3B82F6),
           elevation: 4,
-          shape: const CircleBorder(), 
+          shape: const CircleBorder(),
           onPressed: () {
             setState(() {
               _selectedIndex = 2;
@@ -84,55 +85,54 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildNavItem(int index) {
-  final bool isSelected = _selectedIndex == index;
+    final bool isSelected = _selectedIndex == index;
 
-  return Expanded(
-    child: GestureDetector(
-      onTap: () {
-        setState(() {
-          _selectedIndex = index;
-        });
-      },
-      behavior: HitTestBehavior.opaque,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Thanh gạch xanh phía trên
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: 20,
-            height: 3,
-            margin: const EdgeInsets.only(bottom: 6),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? const Color(0xFF3B82F6)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(2),
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        behavior: HitTestBehavior.opaque,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Thanh gạch xanh phía trên
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: 20,
+              height: 3,
+              margin: const EdgeInsets.only(bottom: 6),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF3B82F6)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-          // Icon với background bo tròn khi được chọn
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? const Color(0xFF3B82F6).withOpacity(0.12)
-                  : Colors.transparent,
-              borderRadius: BorderRadius.circular(12),
+            // Icon với background bo tròn khi được chọn
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: isSelected
+                    ? const Color(0xFF3B82F6).withOpacity(0.12)
+                    : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                _icons[index],
+                size: 24,
+                color: isSelected
+                    ? const Color(0xFF3B82F6)
+                    : const Color(0xFFBDBDBD),
+              ),
             ),
-            child: Icon(
-              _icons[index],
-              size: 24,
-              color: isSelected
-                  ? const Color(0xFF3B82F6)
-                  : const Color(0xFFBDBDBD),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 }

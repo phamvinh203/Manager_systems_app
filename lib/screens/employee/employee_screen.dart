@@ -9,7 +9,7 @@ import 'widgets/employee_search_bar.dart';
 import 'widgets/employee_list.dart';
 import 'widgets/add_member_button.dart';
 import 'add_employee.dart';
-import 'pagination_widget.dart';
+import '../widgets/pagination_widget.dart';
 
 class EmployeeScreen extends StatefulWidget {
   const EmployeeScreen({super.key});

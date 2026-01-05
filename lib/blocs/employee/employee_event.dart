@@ -17,7 +17,6 @@ class LoadEmployeesEvent extends EmployeeEvent {
   List<Object?> get props => [limit];
 }
 
-
 /// Pull to refresh (reset page = 1)
 class RefreshEmployeesEvent extends EmployeeEvent {
   final int limit;
