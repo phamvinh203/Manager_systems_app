@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'widgets/home_header.dart';
+import 'widgets/date_selector.dart';
+import 'widgets/attendance_card.dart';
+import 'widgets/activity_section.dart';
+import 'widgets/swipe_action_button.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -8,43 +13,65 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool _isCheckedIn = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        title: const Text(
-          'Home',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black87),
-      ),
-      body: const Center(
+      backgroundColor: Colors.white,
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.group,
-              size: 64,
-              color: Color(0xFF9E9E9E),
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Home Screen',
-              style: TextStyle(
-                fontSize: 18,
-                color: Color(0xFF666666),
-                fontWeight: FontWeight.w500,
+            // Scrollable content
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: const [
+                    HomeHeader(),
+                    SizedBox(height: 24),
+                    DateSelector(),
+                    SizedBox(height: 24),
+                    AttendanceCard(),
+                    SizedBox(height: 24),
+                    ActivitySection(),
+                    SizedBox(height: 100), // Space for swipe button
+                  ],
+                ),
               ),
             ),
           ],
         ),
+      ),
+      // Swipe button ở dưới cùng
+      bottomSheet: Container(
+        color: Colors.white,
+        padding: const EdgeInsets.all(20),
+        child: _isCheckedIn
+            ? SwipeActionButton.checkOut(
+                onSwipeComplete: () {
+                  setState(() => _isCheckedIn = false);
+                  _showSnackBar('Checked Out Successfully!');
+                },
+              )
+            : SwipeActionButton.checkIn(
+                onSwipeComplete: () {
+                  setState(() => _isCheckedIn = true);
+                  _showSnackBar('Checked In Successfully!');
+                },
+              ),
+      ),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xFF22C55E),
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
     );
   }

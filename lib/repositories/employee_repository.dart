@@ -7,10 +7,11 @@ import 'package:mobile/models/pagination_model.dart';
 
 
 class EmployeeRepository {
-  final DioClient dio;
+  final DioClient client;
   final Logger _logger = Logger();
 
-  EmployeeRepository(this.dio);
+    EmployeeRepository({DioClient? client}) : client = client ?? DioClient();
+
 
   // GET EMPLOYEES (LIST)
   Future<({
@@ -21,7 +22,7 @@ class EmployeeRepository {
     required int limit,
   }) async {
     try {
-      final res = await dio.get(
+      final res = await client.get(
         '/employees',
         queryParameters: {
           'page': page,
@@ -56,7 +57,7 @@ class EmployeeRepository {
   // GET EMPLOYEE DETAIL
   Future<Employee> fetchEmployeeById(int id) async {
     try {
-      final res = await dio.get('/employees/$id');
+      final res = await client.get('employees/$id');
 
       final data = res.data as Map<String, dynamic>;
       final employee = Employee.fromJson(data['data']);
@@ -77,8 +78,8 @@ class EmployeeRepository {
   // CREATE EMPLOYEE
   Future<Employee> create(Employee employee) async {
     try {
-      final res = await dio.post(
-        '/employees',
+      final res = await client.post(
+        'employees',
         data: employee.toJson(),
       );
 
@@ -101,8 +102,8 @@ class EmployeeRepository {
   // UPDATE EMPLOYEE
   Future<Employee> update(int id, Employee employee) async {
     try {
-      final res = await dio.put(
-        '/employees/$id',
+      final res = await client.put(
+        'employees/$id',
         data: employee.toJson(),
       );
 
@@ -125,7 +126,7 @@ class EmployeeRepository {
   // DELETE EMPLOYEE
   Future<void> delete(int id) async {
     try {
-      await dio.delete('/employees/$id');
+      await client.delete('employees/$id');
 
       _logger.i(
         '[EmployeeRepository] Deleted employee id=$id',

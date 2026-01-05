@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/auth/auth_bloc.dart';
+import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/repositories/auth_repository.dart';
+import 'package:mobile/repositories/employee_repository.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
-import 'screens/main_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +19,16 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider(create: (_) => AuthRepository()),
+        RepositoryProvider(create: (_) => EmployeeRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (context) => AuthBloc(context.read<AuthRepository>())),
+            create: (context) => AuthBloc(context.read<AuthRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => EmployeeBloc(context.read<EmployeeRepository>()),
+          ),
         ],
         child: MaterialApp(
           title: 'Manager App',
@@ -31,9 +37,10 @@ class MyApp extends StatelessWidget {
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
             useMaterial3: true,
           ),
-          home: const LoginScreen(), 
+          home: const LoginScreen(),
         ),
       ),
     );
   }
 }
+

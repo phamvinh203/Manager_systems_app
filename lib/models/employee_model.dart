@@ -10,8 +10,8 @@ class Employee {
   final int salary;
   final String status;
   final DateTime hiredAt;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
 
   const Employee({
     required this.id,
@@ -25,30 +25,37 @@ class Employee {
     required this.salary,
     required this.status,
     required this.hiredAt,
-    required this.createdAt,
-    required this.updatedAt,
+    this.createdAt,
+    this.updatedAt,
   });
 
   /// Parse từ JSON (data[])
   factory Employee.fromJson(Map<String, dynamic> json) {
     return Employee(
-      id: json['id'],
-      code: json['code'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
-      email: json['email'],
-      phone: json['phone'],
-      position: json['position'],
-      department: json['department'],
-      salary: json['salary'],
-      status: json['status'],
-      hiredAt: DateTime.parse(json['hiredAt']),
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: json['id'] ?? 0,
+      code: json['code'] ?? '',
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
+      email: json['email'] ?? '',
+      phone: json['phone'] ?? '',
+      position: json['position'] ?? '',
+      department: json['department'] ?? '',
+      salary: json['salary'] ?? 0,
+      status: json['status'] ?? '',
+      hiredAt: json['hiredAt'] != null
+          ? DateTime.parse(json['hiredAt'])
+          : DateTime.now(),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
+          : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
+          : null,
     );
   }
 
   /// Convert ngược lại JSON (create/update)
+  /// Khi tạo mới: không gửi id, createdAt, updatedAt
   Map<String, dynamic> toJson() {
     return {
       'code': code,
@@ -59,9 +66,14 @@ class Employee {
       'position': position,
       'department': department,
       'salary': salary,
-      'status': status,
-      'hiredAt': hiredAt.toIso8601String(),
+      'status': status.toUpperCase(), // Server expects uppercase
+      'hiredAt': _formatDate(hiredAt),
     };
+  }
+
+  /// Format date as yyyy-MM-dd for API
+  String _formatDate(DateTime date) {
+    return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
   }
 
   /// Helper cho UI (optional)
