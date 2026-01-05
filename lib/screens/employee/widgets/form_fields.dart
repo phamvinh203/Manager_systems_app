@@ -67,7 +67,7 @@ class CustomTextField extends StatelessWidget {
 class CustomDropdown extends StatelessWidget {
   final String label;
   final IconData icon;
-  final String value;
+  final String? value; //  nullable
   final List<String> items;
   final void Function(String?) onChanged;
 
@@ -95,32 +95,20 @@ class CustomDropdown extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<String>(
+          value: items.contains(value) ? value : null, // then chốt
           decoration: InputDecoration(
             prefixIcon: Icon(icon, color: const Color(0xFF94A3B8)),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFFE2E8F0)),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: Color(0xFF3B82F6)),
-            ),
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
             ),
           ),
           items: items
-              .map((String item) => DropdownMenuItem<String>(
+              .toSet() // chống trùng
+              .map((item) => DropdownMenuItem<String>(
                     value: item,
                     child: Text(item),
                   ))
               .toList(),
-          value: value,
           onChanged: onChanged,
         ),
       ],
