@@ -27,10 +27,10 @@ class AttendanceModel {
       employeeId: json['employeeId'] as int,
       date: DateTime.parse(json['date'] as String),
       checkIn: json['checkIn'] != null 
-          ? DateTime.parse(json['checkIn'] as String) 
+          ? DateTime.parse(json['checkIn'] as String)
           : null,
       checkOut: json['checkOut'] != null 
-          ? DateTime.parse(json['checkOut'] as String) 
+          ? DateTime.parse(json['checkOut'] as String)
           : null,
       totalHours: json['totalHours'] != null 
           ? (json['totalHours'] as num).toDouble() 

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/employee_model.dart';
+import 'package:mobile/screens/notification/notification_screen.dart';
+import 'package:mobile/screens/notification/widgets/notification_buttom_sheet.dart';
 import 'package:mobile/utils/employee_helpers.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -50,19 +52,38 @@ class HomeHeader extends StatelessWidget {
         ),
 
         // Notification Icon
-        Container(
-          width: 44,
-          height: 44,
-          decoration: BoxDecoration(
-            color: const Color(0xFFF8FAFC),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: const Icon(
-            Icons.notifications_outlined,
-            color: Color(0xFF64748B),
+        GestureDetector(
+          onTap: () {
+            _openNotificationPopup(context);
+          },
+          child: Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF8FAFC),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: const Icon(
+              Icons.notifications_outlined,
+              color: Color(0xFF64748B),
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  void _openNotificationPopup(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return NotificationBottomSheet(
+          builder: (controller) =>
+              NotificationScreen(scrollController: controller),
+        );
+      },
     );
   }
 }

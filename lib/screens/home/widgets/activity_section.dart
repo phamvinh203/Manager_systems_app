@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:mobile/models/attendance_model.dart';
 import 'activity_item.dart';
 
-/// ActivitySection - Hiển thị danh sách attendance gần đây
-/// Nhận data từ Bloc để render, không gọi API trực tiếp
 class ActivitySection extends StatelessWidget {
   final List<AttendanceModel> attendances;
   final VoidCallback? onViewAll;
@@ -54,7 +52,6 @@ class ActivitySection extends StatelessWidget {
 
   /// Build danh sách activity items
   List<Widget> _buildActivityList() {
-    // Lấy tối đa 3 attendance gần nhất
     final recentAttendances = attendances.take(3).toList();
 
     final List<Widget> widgets = [];
@@ -74,7 +71,6 @@ class ActivitySection extends StatelessWidget {
 
   /// Build activity item từ AttendanceModel
   Widget _buildActivityItem(AttendanceModel attendance) {
-    // Xác định icon và title dựa trên trạng thái
     IconData icon;
     String title;
     String status;
@@ -130,7 +126,7 @@ class ActivitySection extends StatelessWidget {
     );
   }
 
-  /// Format date sang dạng "April 17, 2023"
+  /// Định dạng ngày thành chuỗi dễ đọc
   String _formatDate(DateTime date) {
     const months = [
       'January', 'February', 'March', 'April', 'May', 'June',

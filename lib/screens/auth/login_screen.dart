@@ -19,7 +19,6 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
 
-  // Màu chủ đạo giống MainScreen
   static const Color primaryBlue = Color(0xFF3B82F6);
   static const Color lightBlue = Color(0xFFEFF6FF);
   static const Color darkText = Color(0xFF1E293B);

@@ -3,13 +3,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/auth/auth_bloc.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/attendance/attendance_bloc.dart';
+import 'package:mobile/core/services/notification_service.dart';
 import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/repositories/employee_repository.dart';
 import 'package:mobile/repositories/attendance_repository.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 
-void main() {
+void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+
+  await NotificationService().initialize();
   runApp(const MyApp());
 }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 /// DateSelector - Hiển thị danh sách ngày để chọn
-/// Hiển thị 7 ngày tính từ hôm nay, tự động highlight ngày hiện tại
 class DateSelector extends StatefulWidget {
   const DateSelector({super.key});
 
