@@ -241,19 +241,17 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     }
   }
 
-  // Load current employee
+  // Load current employee by userId
   Future<void> _onLoadCurrentEmployee(
     LoadCurrentEmployeeEvent event,
     Emitter<EmployeeState> emit,
   ) async {
     try {
-      final employee = await employeeRepository.fetchEmployeeById(event.employeeId);
-
-      emit(
-        state.copyWith(
-          currentEmployee: employee,
-        ),
+      final employee = await employeeRepository.fetchByUserId(
+        event.userId,
       );
+
+      emit(state.copyWith(currentEmployee: employee));
 
       _logger.i('Loaded current employee: ${employee.fullName}');
     } catch (e) {

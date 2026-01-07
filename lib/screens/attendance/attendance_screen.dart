@@ -46,12 +46,7 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       floatingActionButton: _buildFloatingActionButton(),
       body: BlocListener<AttendanceBloc, AttendanceState>(
         listener: (context, state) {
-          if (state.status == AttendanceStatus.checkedIn) {
-            _showSuccessMessage('Check-in thành công');
-          } else if (state.status == AttendanceStatus.checkedOut) {
-            _showSuccessMessage('Check-out thành công');
-          } else if (state.status == AttendanceStatus.error &&
-              state.errorMessage != null) {
+          if (state.isError && state.errorMessage != null) {
             _showErrorMessage(state.errorMessage!);
           }
         },
@@ -192,23 +187,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
           ],
         ),
         backgroundColor: Colors.red,
-        behavior: SnackBarBehavior.floating,
-      ),
-    );
-  }
-
-  /// Helper: Show success message
-  void _showSuccessMessage(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Row(
-          children: [
-            const Icon(Icons.check_circle_outline, color: Colors.white),
-            const SizedBox(width: 8),
-            Expanded(child: Text(message)),
-          ],
-        ),
-        backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
       ),
     );

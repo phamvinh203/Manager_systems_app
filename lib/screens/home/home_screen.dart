@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void _setupReminders() {
     // Nhắc check-in lúc 8:00
     _notificationService.scheduleCheckInReminder(hour: 8, minute: 0);
-    
+
     // Nhắc check-out lúc 17:30
     _notificationService.scheduleCheckOutReminder(hour: 17, minute: 30);
   }
@@ -62,28 +62,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      
+
       body: BlocListener<AttendanceBloc, AttendanceState>(
-        listenWhen: (previous, current) =>
-            previous.status != current.status,
+        listenWhen: (previous, current) => previous.status != current.status,
         listener: (context, state) {
           // Check-in thành công
           if (state.status == AttendanceStatus.checkedIn) {
             // _showSnackBar('Đã check-in thành công lúc ${state.todayCheckInTime}!', isSuccess: true);
             _refreshAttendanceList();
-            
+
             // Gửi notification
             _notificationService.showCheckInSuccess(
               time: state.todayCheckInTime,
               employeeName: _getEmployeeName(),
             );
           }
-          
+
           // Check-out thành công
           if (state.status == AttendanceStatus.checkedOut) {
             // _showSnackBar('Đã check-out thành công lúc ${state.todayCheckOutTime}!', isSuccess: true);
             _refreshAttendanceList();
-            
+
             // Gửi notification
             _notificationService.showCheckOutSuccess(
               time: state.todayCheckOutTime,
@@ -91,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
               employeeName: _getEmployeeName(),
             );
           }
-          
+
           // Error
           if (state.status == AttendanceStatus.error) {
             // _showSnackBar(state.errorMessage ?? 'Đã xảy ra lỗi', isSuccess: false);
@@ -112,8 +111,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           final employee = state.currentEmployee;
                           return HomeHeader(
                             fullName: employee?.fullName ?? 'Loading...',
-                            position: employee?.position ?? '',
-                            department: employee?.department ?? '',
+                            position: employee?.positionName ?? '',
+                            department: employee?.departmentName ?? '',
                           );
                         },
                       ),
@@ -147,7 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: BlocBuilder<AttendanceBloc, AttendanceState>(
                   buildWhen: (previous, current) =>
                       previous.hasCheckedInToday != current.hasCheckedInToday ||
-                      previous.hasCheckedOutToday != current.hasCheckedOutToday ||
+                      previous.hasCheckedOutToday !=
+                          current.hasCheckedOutToday ||
                       previous.isCheckingIn != current.isCheckingIn ||
                       previous.isCheckingOut != current.isCheckingOut,
                   builder: (context, state) {
@@ -266,5 +266,4 @@ class _HomeScreenState extends State<HomeScreen> {
     final employee = context.read<EmployeeBloc>().state.currentEmployee;
     return employee?.fullName ?? 'Employee';
   }
-
 }

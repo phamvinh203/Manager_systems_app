@@ -78,11 +78,11 @@ class EmployeeDetailScreen extends StatelessWidget {
           height: 100,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: EmployeeHelpers.getAvatarColor(employee.department),
+            color: EmployeeHelpers.getAvatarColor(employee.departmentName),
             boxShadow: [
               BoxShadow(
                 color: EmployeeHelpers.getAvatarColor(
-                  employee.department,
+                  employee.departmentName,
                 ).withValues(alpha: 0.3),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
@@ -111,7 +111,7 @@ class EmployeeDetailScreen extends StatelessWidget {
         ),
         const SizedBox(height: 8),
         Text(
-          employee.position,
+          employee.positionName,
           style: const TextStyle(fontSize: 16, color: Color(0xFF64748B)),
         ),
         const SizedBox(height: 12),
@@ -127,20 +127,28 @@ class EmployeeDetailScreen extends StatelessWidget {
         // Personal Information
         _buildSectionTitle('Personal Information'),
         _buildInfoRow(Icons.person, 'Full Name', employee.fullName),
-        _buildInfoRow(Icons.email, 'Email', employee.email),
-        _buildInfoRow(Icons.phone, 'Phone', employee.phone),
+        _buildInfoRow(Icons.email, 'Email', employee.email ?? 'N/A'),
+        _buildInfoRow(Icons.phone, 'Phone', employee.phone ?? 'N/A'),
         _buildInfoRow(Icons.badge, 'Employee Code', employee.code),
 
         const SizedBox(height: 24),
 
         // Work Information
         _buildSectionTitle('Work Information'),
-        _buildInfoRow(Icons.work, 'Position', employee.position),
-        _buildInfoRow(Icons.business, 'Department', employee.department),
+        _buildInfoRow(
+          Icons.work,
+          'Position',
+          employee.positionName.isEmpty ? 'N/A' : employee.positionName,
+        ),
+        _buildInfoRow(
+          Icons.business,
+          'Department',
+          employee.departmentName.isEmpty ? 'N/A' : employee.departmentName,
+        ),
         _buildInfoRow(
           Icons.account_balance_wallet,
           'Salary',
-          Formatters.formatVND(employee.salary),
+          Formatters.formatVND(employee.salary ?? 0),
         ),
         _buildInfoRow(
           Icons.calendar_today,
@@ -155,12 +163,16 @@ class EmployeeDetailScreen extends StatelessWidget {
         _buildInfoRow(
           Icons.add_circle,
           'Created At',
-          employee.createdAt != null ? Formatters.formatDate(employee.createdAt!) : 'N/A',
+          employee.createdAt != null
+              ? Formatters.formatDate(employee.createdAt!)
+              : 'N/A',
         ),
         _buildInfoRow(
           Icons.update,
           'Updated At',
-          employee.updatedAt != null ? Formatters.formatDate(employee.updatedAt!) : 'N/A',
+          employee.updatedAt != null
+              ? Formatters.formatDate(employee.updatedAt!)
+              : 'N/A',
         ),
       ],
     );

@@ -18,7 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       final auth = await authRepository.login(event.email, event.password);
       // Token đã được lưu trong repository
-      emit(AuthSuccess('Login successful', auth));
+      emit(AuthAuthenticated(user: auth.user, accessToken: auth.accessToken));
     } catch (e) {
       emit(AuthFailure(e.toString()));
     }

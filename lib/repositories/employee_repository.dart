@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
+import 'package:mobile/core/network/api_url.dart';
 import 'package:mobile/core/network/dio_api.dart';
 import 'package:mobile/models/employee_model.dart';
 import 'package:mobile/models/pagination_model.dart';
@@ -17,7 +18,7 @@ class EmployeeRepository {
   }) async {
     try {
       final res = await client.get(
-        '/employees',
+        ApiUrl.employees,
         queryParameters: {'page': page, 'limit': limit},
       );
 
@@ -40,19 +41,21 @@ class EmployeeRepository {
     }
   }
 
-  // GET EMPLOYEE DETAIL
-  Future<Employee> fetchEmployeeById(int id) async {
+  // GET EMPLOYEE BY USER ID (khi login)
+  Future<Employee> fetchByUserId(int userId) async {
     try {
-      final res = await client.get('employees/$id');
+      final res = await client.get(ApiUrl.getByUserId(userId));
 
       final data = res.data as Map<String, dynamic>;
       final employee = Employee.fromJson(data['data']);
 
-      _logger.i('[EmployeeRepository] Fetched employee id=$id');
+      _logger.i('[EmployeeRepository] Fetched employee by userId=$userId');
 
       return employee;
     } on DioException catch (e) {
-      _logger.e('[EmployeeRepository] fetchEmployeeById error: ${e.message}');
+      _logger.e(
+        '[EmployeeRepository] fetchByUserId error: ${e.message}',
+      );
       throw Exception(_mapDioError(e));
     }
   }
@@ -60,7 +63,7 @@ class EmployeeRepository {
   // CREATE EMPLOYEE
   Future<Employee> create(Employee employee) async {
     try {
-      final res = await client.post('employees', data: employee.toJson());
+      final res = await client.post(ApiUrl.createEmployee, data: employee.toJson());
 
       final data = res.data as Map<String, dynamic>;
       final created = Employee.fromJson(data['data']);
@@ -77,7 +80,7 @@ class EmployeeRepository {
   // UPDATE EMPLOYEE
   Future<Employee> update(int id, Employee employee) async {
     try {
-      final res = await client.put('employees/$id', data: employee.toJson());
+      final res = await client.put(ApiUrl.updateEmployee(id), data: employee.toJson());
 
       final data = res.data as Map<String, dynamic>;
       final updated = Employee.fromJson(data['data']);
@@ -94,7 +97,7 @@ class EmployeeRepository {
   // DELETE EMPLOYEE
   Future<void> delete(int id) async {
     try {
-      await client.delete('employees/$id');
+      await client.delete(ApiUrl.deleteEmployee(id));
 
       _logger.i('[EmployeeRepository] Deleted employee id=$id');
     } on DioException catch (e) {

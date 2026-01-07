@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
         listener: (context, state) {
           if (state is AuthFailure) {
             _showErrorSnackBar(context, state.message);
-          } else if (state is AuthSuccess || state is AuthAuthenticated) {
+          } else if (state is AuthAuthenticated) {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (_) => const MainScreen()),
             );

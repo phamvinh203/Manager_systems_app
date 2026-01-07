@@ -17,7 +17,8 @@ class EmployeeItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Get initials from first and last name
-    final String initials = '${employee.firstName[0]}${employee.lastName[0]}'.toUpperCase();
+    final String initials = '${employee.firstName[0]}${employee.lastName[0]}'
+        .toUpperCase();
 
     return InkWell(
       onTap: onTap,
@@ -32,11 +33,8 @@ class EmployeeItem extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: EmployeeHelpers.getAvatarColor(employee.department),
-                border: Border.all(
-                  color: const Color(0xFFE2E8F0),
-                  width: 2,
-                ),
+                color: EmployeeHelpers.getAvatarColor(employee.departmentName),
+                border: Border.all(color: const Color(0xFFE2E8F0), width: 2),
               ),
               child: Center(
                 child: Text(
@@ -66,7 +64,7 @@ class EmployeeItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    employee.email,
+                    employee.email ?? '',
                     style: const TextStyle(
                       fontSize: 14,
                       color: Color(0xFF94A3B8),
@@ -74,7 +72,7 @@ class EmployeeItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${employee.position} • ${employee.department}',
+                    '${employee.positionName} • ${employee.departmentName}',
                     style: const TextStyle(
                       fontSize: 12,
                       color: Color(0xFFCBD5E1),
@@ -108,5 +106,4 @@ class EmployeeItem extends StatelessWidget {
       ),
     );
   }
-
 }

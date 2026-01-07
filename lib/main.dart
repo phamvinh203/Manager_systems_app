@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/auth/auth_bloc.dart';
-import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/attendance/attendance_bloc.dart';
+import 'package:mobile/blocs/departments/departments_bloc.dart';
+import 'package:mobile/blocs/employee/employee_bloc.dart';
+import 'package:mobile/blocs/positions/positions_bloc.dart';
 import 'package:mobile/core/services/notification_service.dart';
 import 'package:mobile/repositories/auth_repository.dart';
-import 'package:mobile/repositories/employee_repository.dart';
 import 'package:mobile/repositories/attendance_repository.dart';
+import 'package:mobile/repositories/departments_repository.dart';
+import 'package:mobile/repositories/employee_repository.dart';
+import 'package:mobile/repositories/positions_repository.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 
 void main() async{
@@ -26,6 +30,8 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (_) => AuthRepository()),
         RepositoryProvider(create: (_) => EmployeeRepository()),
         RepositoryProvider(create: (_) => AttendanceRepository()),
+        RepositoryProvider(create: (_) => DepartmentsRepository()),
+        RepositoryProvider(create: (_) => PositionsRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -37,6 +43,16 @@ class MyApp extends StatelessWidget {
           ),
           BlocProvider(
             create: (context) => AttendanceBloc(context.read<AttendanceRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => DepartmentsBloc(
+              repository: context.read<DepartmentsRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => PositionsBloc(
+              repository: context.read<PositionsRepository>(),
+            ),
           ),
         ],
         child: MaterialApp(

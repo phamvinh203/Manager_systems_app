@@ -1,34 +1,17 @@
 import 'package:flutter/material.dart';
 
-// Constants for dropdown lists
+// Constants for dropdown lists (chỉ giữ statuses vì departments và positions lấy từ API)
 class EmployeeConstants {
-  static const List<String> positions = [
-    'Software Engineer',
-    'Senior Software Engineer',
-    'Tech Lead',
-    'Project Manager',
-    'Product Manager',
-    'Designer',
-    'QA Engineer',
-    'DevOps Engineer',
-    'Data Analyst',
-    'HR Manager',
-  ];
-
-  static const List<String> departments = [
-    'IT',
-    'HR',
-    'Finance',
-    'Marketing',
-    'Sales',
-    'Operations',
-  ];
-
   static const List<String> statuses = ['ACTIVE', 'INACTIVE', 'ON_LEAVE'];
 }
 
 class EmployeeHelpers {
-  static Color getAvatarColor(String department) {
+  /// Lấy màu avatar dựa trên tên department
+  static Color getAvatarColor(String? departmentName) {
+    if (departmentName == null || departmentName.isEmpty) {
+      return const Color(0xFF64748B);
+    }
+
     final colors = {
       'IT': const Color(0xFF3B82F6),
       'HR': const Color(0xFFEC4899),
@@ -37,11 +20,13 @@ class EmployeeHelpers {
       'Sales': const Color(0xFF8B5CF6),
       'Operations': const Color(0xFFEF4444),
     };
-    return colors[department] ?? const Color(0xFF64748B);
+    return colors[departmentName] ?? const Color(0xFF64748B);
   }
 
   static String getInitials(String firstName, String lastName) {
-    return '${firstName[0]}${lastName[0]}'.toUpperCase();
+    final f = firstName.isNotEmpty ? firstName[0] : '';
+    final l = lastName.isNotEmpty ? lastName[0] : '';
+    return '$f$l'.toUpperCase();
   }
 }
 

@@ -93,11 +93,12 @@ class SearchEmployeesEvent extends EmployeeEvent {
   List<Object?> get props => [query];
 }
 
+/// Load current employee by userId (sau khi login)
 class LoadCurrentEmployeeEvent extends EmployeeEvent {
-  final int employeeId;
+  final int userId;
 
-  const LoadCurrentEmployeeEvent(this.employeeId);
+  const LoadCurrentEmployeeEvent(this.userId);
 
   @override
-  List<Object?> get props => [employeeId];
+  List<Object?> get props => [userId];
 }

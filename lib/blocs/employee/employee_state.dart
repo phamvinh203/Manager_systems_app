@@ -1,6 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:mobile/models/department_model.dart';
 import 'package:mobile/models/employee_model.dart';
 import 'package:mobile/models/pagination_model.dart';
+import 'package:mobile/models/position_model.dart';
 
 enum EmployeeStatus { initial, loading, loaded, error }
 
@@ -12,6 +14,11 @@ class EmployeeState extends Equatable {
   final Pagination? pagination;
   final Employee? currentEmployee;
 
+  // Dropdown data
+  final List<Department> departments;
+  final List<Position> positions;
+  final bool isLoadingDropdowns;
+
   /// Messages
   final String? errorMessage;
   final String? successMessage;
@@ -21,6 +28,9 @@ class EmployeeState extends Equatable {
     this.employees = const [],
     this.pagination,
     this.currentEmployee,
+    this.departments = const [],
+    this.positions = const [],
+    this.isLoadingDropdowns = false,
     this.successMessage,
     this.errorMessage,
   });
@@ -34,6 +44,9 @@ class EmployeeState extends Equatable {
     List<Employee>? employees,
     Pagination? pagination,
     Employee? currentEmployee,
+    List<Department>? departments,
+    List<Position>? positions,
+    bool? isLoadingDropdowns,
     String? errorMessage,
     String? successMessage,
     bool clearError = false,
@@ -45,6 +58,9 @@ class EmployeeState extends Equatable {
       employees: employees ?? this.employees,
       pagination: clearPagination ? null : (pagination ?? this.pagination),
       currentEmployee: currentEmployee ?? this.currentEmployee,
+      departments: departments ?? this.departments,
+      positions: positions ?? this.positions,
+      isLoadingDropdowns: isLoadingDropdowns ?? this.isLoadingDropdowns,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       successMessage: clearSuccess
           ? null
@@ -64,12 +80,18 @@ class EmployeeState extends Equatable {
 
   int get totalEmployees => employees.length;
 
+  bool get hasDepartments => departments.isNotEmpty;
+  bool get hasPositions => positions.isNotEmpty;
+
   @override
   List<Object?> get props => [
     status,
     employees,
     pagination,
     currentEmployee,
+    departments,
+    positions,
+    isLoadingDropdowns,
     errorMessage,
     successMessage,
   ];
