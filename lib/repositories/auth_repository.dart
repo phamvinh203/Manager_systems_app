@@ -16,6 +16,7 @@ class AuthRepository {
     final auth = AuthResponse.fromJson(res.data);
 
     await TokenStorage.saveToken(auth.accessToken);
+    await TokenStorage.saveUserId(auth.user.id);
     return auth;
   }
 

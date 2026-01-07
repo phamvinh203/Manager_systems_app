@@ -6,6 +6,9 @@ class ApiUrl {
   static const String register = '${baseUrl}auth/register';
 
   // employee endpoints
+  // GET /api/employees/user/:userId - Lấy thông tin nhân viên theo userId
+  static String getEmployeeByUserId(int userId) => '${baseUrl}employees/user/$userId';
+  
   // GET /api/employees - Lấy danh sách tất cả nhân viên (có pagination: page, limit)
   static const String employees = '${baseUrl}employees';
 

@@ -4,7 +4,9 @@ import 'package:mobile/blocs/attendance/attendance_bloc.dart';
 import 'package:mobile/blocs/attendance/attendance_event.dart';
 import 'package:mobile/blocs/attendance/attendance_state.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
+import 'package:mobile/blocs/employee/employee_event.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
+import 'package:mobile/core/storage/token_storage.dart';
 import 'widgets/home_header.dart';
 import 'widgets/date_selector.dart';
 import 'widgets/activity_section.dart';
@@ -26,6 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     _loadTodayAttendance();
+    _loadCurrentEmployee();
     _setupReminders();
   }
 
@@ -45,6 +48,14 @@ class _HomeScreenState extends State<HomeScreen> {
     context.read<AttendanceBloc>().add(
       LoadMyAttendanceEvent(month: now.month, year: now.year),
     );
+  }
+
+  /// Load thông tin employee hiện tại
+  Future<void> _loadCurrentEmployee() async {
+    final userId = await TokenStorage.getUserId();
+    if (userId != null && mounted) {
+      context.read<EmployeeBloc>().add(LoadCurrentEmployeeEvent(userId));
+    }
   }
 
   @override
@@ -98,10 +109,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       BlocBuilder<EmployeeBloc, EmployeeState>(
                         builder: (context, state) {
-                          if (state.employees.isEmpty) {
-                            return const SizedBox.shrink();
-                          }
-                          return HomeHeader(employee: state.employees.first);
+                          final employee = state.currentEmployee;
+                          return HomeHeader(
+                            fullName: employee?.fullName ?? 'Loading...',
+                            position: employee?.position ?? '',
+                            department: employee?.department ?? '',
+                          );
                         },
                       ),
                       const SizedBox(height: 24),
@@ -248,15 +261,10 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
-  /// Lấy tên nhân viên từ EmployeeBloc
-  String? _getEmployeeName() {
-    final employeeState = context.read<EmployeeBloc>().state;
-    if (employeeState.employees.isNotEmpty) {
-      final emp = employeeState.employees.first;
-      return '${emp.firstName} ${emp.lastName}';
-    }
-    return null;
+  /// Lấy tên employee hiện tại
+  String _getEmployeeName() {
+    final employee = context.read<EmployeeBloc>().state.currentEmployee;
+    return employee?.fullName ?? 'Employee';
   }
 
 }

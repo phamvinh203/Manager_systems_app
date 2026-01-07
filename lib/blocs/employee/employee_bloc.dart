@@ -17,6 +17,7 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
     on<CreateEmployeeEvent>(_onCreateEmployee);
     on<UpdateEmployeeEvent>(_onUpdateEmployee);
     on<ClearMessagesEvent>(_onClearMessages);
+    on<LoadCurrentEmployeeEvent>(_onLoadCurrentEmployee);
   }
   // Clear messages
   void _onClearMessages(ClearMessagesEvent event, Emitter<EmployeeState> emit) {
@@ -237,6 +238,28 @@ class EmployeeBloc extends Bloc<EmployeeEvent, EmployeeState> {
       _logger.e('Update employee error: $e');
 
       emit(state.copyWith(errorMessage: 'Failed to update employee'));
+    }
+  }
+
+  // Load current employee
+  Future<void> _onLoadCurrentEmployee(
+    LoadCurrentEmployeeEvent event,
+    Emitter<EmployeeState> emit,
+  ) async {
+    try {
+      final employee = await employeeRepository.fetchEmployeeById(event.employeeId);
+
+      emit(
+        state.copyWith(
+          currentEmployee: employee,
+        ),
+      );
+
+      _logger.i('Loaded current employee: ${employee.fullName}');
+    } catch (e) {
+      _logger.e('Load current employee error: $e');
+
+      emit(state.copyWith(errorMessage: 'Failed to load current employee'));
     }
   }
 }

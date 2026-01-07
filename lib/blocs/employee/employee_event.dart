@@ -92,3 +92,12 @@ class SearchEmployeesEvent extends EmployeeEvent {
   @override
   List<Object?> get props => [query];
 }
+
+class LoadCurrentEmployeeEvent extends EmployeeEvent {
+  final int employeeId;
+
+  const LoadCurrentEmployeeEvent(this.employeeId);
+
+  @override
+  List<Object?> get props => [employeeId];
+}

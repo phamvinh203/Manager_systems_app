@@ -23,12 +23,17 @@ class _MainScreenState extends State<MainScreen> {
     ProfileScreen(),
   ];
 
-  final List<IconData> _icons = [
-    Icons.home_rounded,
-    Icons.calendar_today_outlined,
-    Icons.groups_rounded,
-    Icons.smart_toy_outlined,
-    Icons.person_outline,
+  final List<Widget> _icons = <Widget>[
+    const Icon(Icons.home_rounded),
+    const Icon(Icons.calendar_today_outlined),
+    const Icon(Icons.groups_rounded),
+    Image.asset(
+      'assets/images/icon_work.png',
+      width: 24,
+      height: 24,
+      color: const Color(0xFFBDBDBD),
+    ),
+    const Icon(Icons.person_outline),
   ];
 
   @override
@@ -87,6 +92,26 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildNavItem(int index) {
     final bool isSelected = _selectedIndex == index;
 
+    // LẤY ICON
+    Widget icon = _icons[index];
+
+    // NẾU LÀ IMAGE → ĐỔI MÀU THEO SELECT
+    if (icon is Image && icon.image is AssetImage) {
+      final String assetName = (icon.image as AssetImage).assetName;
+      icon = Image.asset(
+        assetName,
+        width: 24,
+        height: 24,
+        color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFBDBDBD),
+      );
+    } else if (icon is Icon) {
+      icon = Icon(
+        icon.icon,
+        size: 24,
+        color: isSelected ? const Color(0xFF3B82F6) : const Color(0xFFBDBDBD),
+      );
+    }
+
     return Expanded(
       child: GestureDetector(
         onTap: () {
@@ -112,7 +137,8 @@ class _MainScreenState extends State<MainScreen> {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            // Icon với background bo tròn khi được chọn
+
+            // Icon
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
               padding: const EdgeInsets.all(10),
@@ -122,13 +148,7 @@ class _MainScreenState extends State<MainScreen> {
                     : Colors.transparent,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                _icons[index],
-                size: 24,
-                color: isSelected
-                    ? const Color(0xFF3B82F6)
-                    : const Color(0xFFBDBDBD),
-              ),
+              child: SizedBox(width: 24, height: 24, child: icon),
             ),
           ],
         ),

@@ -10,6 +10,7 @@ class EmployeeState extends Equatable {
   //data
   final List<Employee> employees;
   final Pagination? pagination;
+  final Employee? currentEmployee;
 
   /// Messages
   final String? errorMessage;
@@ -19,6 +20,7 @@ class EmployeeState extends Equatable {
     this.status = EmployeeStatus.initial,
     this.employees = const [],
     this.pagination,
+    this.currentEmployee,
     this.successMessage,
     this.errorMessage,
   });
@@ -31,6 +33,7 @@ class EmployeeState extends Equatable {
     EmployeeStatus? status,
     List<Employee>? employees,
     Pagination? pagination,
+    Employee? currentEmployee,
     String? errorMessage,
     String? successMessage,
     bool clearError = false,
@@ -41,6 +44,7 @@ class EmployeeState extends Equatable {
       status: status ?? this.status,
       employees: employees ?? this.employees,
       pagination: clearPagination ? null : (pagination ?? this.pagination),
+      currentEmployee: currentEmployee ?? this.currentEmployee,
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
       successMessage: clearSuccess
           ? null
@@ -65,6 +69,7 @@ class EmployeeState extends Equatable {
     status,
     employees,
     pagination,
+    currentEmployee,
     errorMessage,
     successMessage,
   ];
