@@ -4,7 +4,6 @@ import 'package:mobile/blocs/departments/departments_bloc.dart';
 import 'package:mobile/blocs/departments/departments_event.dart';
 import 'package:mobile/blocs/departments/departments_state.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
-import 'package:mobile/blocs/employee/employee_event.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/blocs/positions/positions_bloc.dart';
 import 'package:mobile/blocs/positions/positions_event.dart';

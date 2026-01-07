@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/blocs/employee/employee_event.dart';
+import 'package:mobile/screens/widgets/role_based_widget.dart';
 import 'widgets/employee_search_bar.dart';
 import 'widgets/employee_list.dart';
 import 'widgets/add_member_button.dart';
@@ -83,18 +84,21 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
               },
             ),
 
-            // Add member button
-            AddMemberButton(
-              onPressed: () async{
-                await Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AddEmployeeScreen()),
-                );
+            // Add member button - chỉ ADMIN và HR mới thấy
+            RoleBasedWidget(
+              allowedRoles: const ['ADMIN', 'HR'],
+              child: AddMemberButton(
+                onPressed: () async{
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const AddEmployeeScreen()),
+                  );
 
-                context
-                    .read<EmployeeBloc>()
-                    .add(const LoadEmployeesEvent());
-              },
+                  context
+                      .read<EmployeeBloc>()
+                      .add(const LoadEmployeesEvent());
+                },
+              ),
             ),
             const SizedBox(height: 16),
           ],

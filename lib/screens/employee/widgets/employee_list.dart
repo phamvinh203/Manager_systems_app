@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/blocs/employee/employee_event.dart';
+import 'package:mobile/blocs/auth/auth_bloc.dart';
+import 'package:mobile/blocs/auth/auth_state.dart';
 import 'package:mobile/models/employee_model.dart';
 import 'employee_item.dart';
 import '../employee_detail.dart';
@@ -75,18 +77,26 @@ class EmployeeList extends StatelessWidget {
             separatorBuilder: (_, __) => const Divider(height: 1),
             itemBuilder: (context, index) {
               final employee = state.employees[index];
-              return EmployeeItem(
-                employee: employee,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => EmployeeDetailScreen(employee: employee),
-                    ),
+              return BlocBuilder<AuthBloc, AuthState>(
+                builder: (context, authState) {
+                  // Kiểm tra quyền: ADMIN và HR mới được xem chi tiết và mở menu
+                  final canManage = authState is AuthAuthenticated &&
+                      (authState.isAdmin || authState.isHR);
+
+                  return EmployeeItem(
+                    employee: employee,
+                    onTap: canManage ? () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => EmployeeDetailScreen(employee: employee),
+                        ),
+                      );
+                    } : null,
+                    onMenuPressed: canManage ? () {
+                      _showEmployeeOptions(context, employee);
+                    } : null,
                   );
-                },
-                onMenuPressed: () {
-                  _showEmployeeOptions(context, employee);
                 },
               );
             },
