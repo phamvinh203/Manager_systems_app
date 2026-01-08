@@ -37,7 +37,8 @@ class AttendanceCard extends StatelessWidget {
                 color: Color(0xFF1E293B),
               ),
             ),
-            const SizedBox(height: 16),
+            // const SizedBox(height: 16),
+            const Divider(),
 
             // Grid 2x2 với real data
             GridView.count(

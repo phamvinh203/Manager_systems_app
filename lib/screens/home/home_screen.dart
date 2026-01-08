@@ -7,6 +7,7 @@ import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/employee/employee_event.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/core/storage/token_storage.dart';
+import 'package:mobile/screens/main_screen.dart';
 import 'widgets/home_header.dart';
 import 'widgets/date_selector.dart';
 import 'widgets/activity_section.dart';
@@ -23,6 +24,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final _notificationService = NotificationService();
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -61,7 +63,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 126, 117, 117),
 
       body: BlocListener<AttendanceBloc, AttendanceState>(
         listenWhen: (previous, current) => previous.status != current.status,
@@ -99,80 +101,87 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SafeArea(
           child: Column(
             children: [
-              // Scrollable content
               Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      BlocBuilder<EmployeeBloc, EmployeeState>(
-                        builder: (context, state) {
-                          final employee = state.currentEmployee;
-                          return HomeHeader(
-                            fullName: employee?.fullName ?? 'Loading...',
-                            position: employee?.positionName ?? '',
-                            department: employee?.departmentName ?? '',
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 24),
-                      const DateSelector(),
-                      const SizedBox(height: 24),
-                      const AttendanceCard(),
-                      const SizedBox(height: 24),
-                      BlocBuilder<AttendanceBloc, AttendanceState>(
-                        buildWhen: (previous, current) =>
-                            previous.myAttendances != current.myAttendances,
-                        builder: (context, state) {
-                          return ActivitySection(
-                            attendances: state.myAttendances,
-                            onViewAll: () {
-                              print('Navigate to Attendance Screen');
-                            },
-                          );
-                        },
-                      ),
-                      const SizedBox(height: 16),
-                    ],
+                child: Scrollbar(
+                  controller: _scrollController,
+                  thumbVisibility: true,
+                  interactive: true,
+                  thickness: 6,
+                  radius: const Radius.circular(8),
+                  child: SingleChildScrollView(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        BlocBuilder<EmployeeBloc, EmployeeState>(
+                          builder: (context, state) {
+                            final employee = state.currentEmployee;
+                            return HomeHeader(
+                              fullName: employee?.fullName ?? 'Loading...',
+                              position: employee?.positionName ?? '',
+                              department: employee?.departmentName ?? '',
+                            );
+                          },
+                        ),
+                        // const SizedBox(height: 24),
+                        const Divider(),
+                        const DateSelector(),
+                        // const SizedBox(height: 24),
+                        const Divider(),
+                        const AttendanceCard(),
+                        // const SizedBox(height: 24),
+                        const Divider(),
+
+                        BlocBuilder<AttendanceBloc, AttendanceState>(
+                          buildWhen: (previous, current) =>
+                              previous.myAttendances != current.myAttendances,
+                          builder: (context, state) {
+                            return ActivitySection(
+                              attendances: state.myAttendances,
+                              onViewAll: () {
+                                MainScreen.of(context)?.switchToTab(1);
+                              },
+                            );
+                          },
+                        ),
+
+                        // const SizedBox(height: 32),
+                        const Divider(),
+                        // BUTTON ĐƯỢC ĐƯA VÀO SCROLL
+                        BlocBuilder<AttendanceBloc, AttendanceState>(
+                          buildWhen: (previous, current) =>
+                              previous.hasCheckedInToday !=
+                                  current.hasCheckedInToday ||
+                              previous.hasCheckedOutToday !=
+                                  current.hasCheckedOutToday ||
+                              previous.isCheckingIn != current.isCheckingIn ||
+                              previous.isCheckingOut != current.isCheckingOut,
+                          builder: (context, state) {
+                            if (state.isCheckingIn || state.isCheckingOut) {
+                              return _buildLoadingButton(state.isCheckingIn);
+                            }
+
+                            if (state.hasCheckedOutToday) {
+                              return _buildCompletedButton();
+                            }
+
+                            if (state.canCheckOut) {
+                              return SwipeActionButton.checkOut(
+                                onSwipeComplete: _handleCheckOut,
+                              );
+                            }
+
+                            return SwipeActionButton.checkIn(
+                              onSwipeComplete: _handleCheckIn,
+                            );
+                          },
+                        ),
+                        const Divider(),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-
-              // Swipe button
-              Container(
-                color: Colors.white,
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 16),
-                child: BlocBuilder<AttendanceBloc, AttendanceState>(
-                  buildWhen: (previous, current) =>
-                      previous.hasCheckedInToday != current.hasCheckedInToday ||
-                      previous.hasCheckedOutToday !=
-                          current.hasCheckedOutToday ||
-                      previous.isCheckingIn != current.isCheckingIn ||
-                      previous.isCheckingOut != current.isCheckingOut,
-                  builder: (context, state) {
-                    // Hiển thị loading khi đang check-in/check-out
-                    if (state.isCheckingIn || state.isCheckingOut) {
-                      return _buildLoadingButton(state.isCheckingIn);
-                    }
-
-                    // Đã check-out xong -> hiển thị completed
-                    if (state.hasCheckedOutToday) {
-                      return _buildCompletedButton();
-                    }
-
-                    // Có thể check-out
-                    if (state.canCheckOut) {
-                      return SwipeActionButton.checkOut(
-                        onSwipeComplete: _handleCheckOut,
-                      );
-                    }
-
-                    // Có thể check-in
-                    return SwipeActionButton.checkIn(
-                      onSwipeComplete: _handleCheckIn,
-                    );
-                  },
                 ),
               ),
             ],

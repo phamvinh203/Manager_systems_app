@@ -6,11 +6,7 @@ class ActivitySection extends StatelessWidget {
   final List<AttendanceModel> attendances;
   final VoidCallback? onViewAll;
 
-  const ActivitySection({
-    super.key,
-    required this.attendances,
-    this.onViewAll,
-  });
+  const ActivitySection({super.key, required this.attendances, this.onViewAll});
 
   @override
   Widget build(BuildContext context) {
@@ -40,12 +36,12 @@ class ActivitySection extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 12),
+        // const SizedBox(height: 12),
+        const Divider(),
 
         // Activity List - Hiển thị tối đa 3 items gần nhất
         if (attendances.isEmpty) _buildEmptyState(),
-        if (attendances.isNotEmpty)
-          ..._buildActivityList(),
+        if (attendances.isNotEmpty) ..._buildActivityList(),
       ],
     );
   }
@@ -108,18 +104,11 @@ class ActivitySection extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Icon(
-            Icons.event_busy_outlined,
-            size: 40,
-            color: Colors.grey[400],
-          ),
+          Icon(Icons.event_busy_outlined, size: 40, color: Colors.grey[400]),
           const SizedBox(height: 12),
           const Text(
             'Chưa có hoạt động',
-            style: TextStyle(
-              fontSize: 14,
-              color: Color(0xFF64748B),
-            ),
+            style: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
           ),
         ],
       ),
@@ -129,8 +118,18 @@ class ActivitySection extends StatelessWidget {
   /// Định dạng ngày thành chuỗi dễ đọc
   String _formatDate(DateTime date) {
     const months = [
-      'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
 
     return '${months[date.month - 1]} ${date.day}, ${date.year}';

@@ -8,12 +8,26 @@ import 'package:mobile/screens/workspace/workspace_screen.dart';
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
+  /// Access MainScreenState from child widgets
+  static _MainScreenState? of(BuildContext context) {
+    return context.findAncestorStateOfType<_MainScreenState>();
+  }
+
   @override
   State<MainScreen> createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
+
+  /// Switch to a specific tab by index
+  void switchToTab(int index) {
+    if (index >= 0 && index < _pages.length) {
+      setState(() {
+        _selectedIndex = index;
+      });
+    }
+  }
 
   final List<Widget> _pages = const [
     HomeScreen(),
