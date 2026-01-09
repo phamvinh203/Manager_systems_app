@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class ProfileMenuItems extends StatelessWidget {
   final VoidCallback? onMyProfileTap;
+  final VoidCallback? onLeaveTap;
   final VoidCallback? onSettingsTap;
   final VoidCallback? onTermsTap;
   final VoidCallback? onPrivacyTap;
@@ -10,6 +11,7 @@ class ProfileMenuItems extends StatelessWidget {
   const ProfileMenuItems({
     super.key,
     this.onMyProfileTap,
+    this.onLeaveTap,
     this.onSettingsTap,
     this.onTermsTap,
     this.onPrivacyTap,
@@ -24,31 +26,37 @@ class ProfileMenuItems extends StatelessWidget {
         children: [
           _buildMenuItem(
             icon: Icons.person_outline,
-            title: 'My Profile',
+            title: 'Hồ sơ của tôi',
             onTap: onMyProfileTap,
           ),
 
           _buildMenuItem(
+            icon: Icons.work_off_outlined,
+            title: 'Đơn xin nghỉ phép',
+            onTap: onLeaveTap,
+          ),
+
+          _buildMenuItem(
             icon: Icons.settings_outlined,
-            title: 'Settings',
+            title: 'Cài đặt',
             onTap: onSettingsTap,
           ),
 
           _buildMenuItem(
             icon: Icons.description_outlined,
-            title: 'Terms & Conditions',
+            title: 'Điều khoản & Điều kiện',
             onTap: onTermsTap,
           ),
 
           _buildMenuItem(
             icon: Icons.privacy_tip_outlined,
-            title: 'Privacy Policy',
+            title: 'Chính sách bảo mật',
             onTap: onPrivacyTap,
           ),
 
           _buildMenuItem(
             icon: Icons.logout,
-            title: 'Log out',
+            title: 'Đăng xuất',
             onTap: onLogoutTap,
             isLogout: true,
             showDivider: false,
@@ -70,10 +78,7 @@ class ProfileMenuItems extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 16,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
             child: Row(
               children: [
                 // Icon

@@ -8,6 +8,7 @@ import 'package:mobile/blocs/employee/employee_event.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/core/storage/token_storage.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
+import 'package:mobile/screens/leaves/leave_screen.dart';
 import 'package:mobile/screens/profile/widgets/profile_detail.dart';
 import 'package:mobile/screens/profile/widgets/profile_setting.dart';
 import 'widgets/profile_header.dart';
@@ -47,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           TextButton(
             onPressed: () {
-              Navigator.pop(dialogContext); // Close dialog
+              Navigator.pop(dialogContext);
               // Trigger logout event
               context.read<AuthBloc>().add(const LogoutRequested());
             },
@@ -100,6 +101,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => const ProfileDetail(),
+                          ),
+                        );
+                      },
+                      onLeaveTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const LeaveScreen(),
                           ),
                         );
                       },

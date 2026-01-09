@@ -32,4 +32,12 @@ class ApiUrl {
   static const String checkOut = '${baseUrl}attendance/check-out';
   static const String meAttendance = '${baseUrl}attendance/me';
   static const String allAttendance = '${baseUrl}attendance';
+
+  // leave request endpoints
+  static const String leaveRequests = '${baseUrl}leave/requests';
+  static const String myLeaveRequests = '${baseUrl}leave/requests/me';
+  static const String myIdLeaveRequests = '${baseUrl}leave/requests';
+  // hủy đơn nghỉ phép phía user khi đơn chưa được duyệt
+  static String cancelLeaveRequest(String requestId) =>
+      '${baseUrl}leave/requests/$requestId/cancel';
 }

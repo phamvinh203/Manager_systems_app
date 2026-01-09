@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Constants for dropdown lists (chỉ giữ statuses vì departments và positions lấy từ API)
 class EmployeeConstants {
   static const List<String> statuses = ['ACTIVE', 'INACTIVE', 'ON_LEAVE'];
 }

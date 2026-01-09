@@ -18,6 +18,7 @@ class NotificationService {
   static const int checkOutSuccessId = 2;
   static const int checkInReminderId = 10;
   static const int checkOutReminderId = 11;
+  static const int leaveRequestCreatedId = 20;
 
   // Storage keys
   static const String _enabledKey = 'notifications_enabled';
@@ -273,5 +274,28 @@ class NotificationService {
   Future<void> cancelCheckOutReminder() async {
     await cancel(checkOutReminderId);
     await setCheckOutReminderEnabled(false);
+  }
+
+  // ============== LEAVE REQUEST NOTIFICATIONS ==============
+
+  Future<void> showLeaveRequestCreated({
+    required String leaveType,
+    required String startDate,
+    required String endDate,
+    required double totalDays,
+  }) async {
+    if (!await isNotificationsEnabled()) return;
+
+    await _notifications.show(
+      leaveRequestCreatedId,
+      '📝 Đơn nghỉ phép đã được tạo',
+      '$leaveType: $startDate - $endDate ($totalDays ngày)\nĐang chờ phê duyệt',
+      _getNotificationDetails(
+        channelId: 'leave_channel',
+        channelName: 'Nghỉ phép',
+        channelDescription: 'Thông báo về đơn nghỉ phép',
+      ),
+      payload: 'leave_request_created',
+    );
   }
 }
