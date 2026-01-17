@@ -157,7 +157,7 @@ class LeaveRequestModel {
 
 class EmployeeBriefModel {
   final int id;
-  final String code;
+  final String? code;
   final String firstName;
   final String lastName;
   final DepartmentBriefModel? department;
@@ -165,7 +165,7 @@ class EmployeeBriefModel {
 
   EmployeeBriefModel({
     required this.id,
-    required this.code,
+    this.code,
     required this.firstName,
     required this.lastName,
     this.department,
@@ -176,8 +176,8 @@ class EmployeeBriefModel {
     return EmployeeBriefModel(
       id: json['id'],
       code: json['code'],
-      firstName: json['firstName'],
-      lastName: json['lastName'],
+      firstName: json['firstName'] ?? '',
+      lastName: json['lastName'] ?? '',
       department: json['department'] != null
           ? DepartmentBriefModel.fromJson(json['department'])
           : null,

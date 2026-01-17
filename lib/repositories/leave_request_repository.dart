@@ -158,10 +158,13 @@ class LeaveRequestRepository {
   }
 
   // Patch APPROVE LEAVE REQUEST - Phê duyệt đơn xin nghỉ phép (dành cho Manager)
-  Future<void> approveLeaveRequest(String requestId) async {
+  Future<LeaveRequestModel> approveLeaveRequest(String requestId) async {
     try {
-      await client.patch(ApiUrl.approveLeaveRequest(requestId));
-      _logger.i('[LeaveRequestRepository] Approved leave request $requestId');
+      final response =
+          await client.patch(ApiUrl.approveLeaveRequest(requestId));
+
+      final data = response.data['data'] as Map<String, dynamic>;
+      return LeaveRequestModel.fromJson(data);
     } on DioException catch (e) {
       final message = _getErrorMessage(e);
       _logger.e('[LeaveRequestRepository] approveLeaveRequest error: $message');
@@ -169,20 +172,27 @@ class LeaveRequestRepository {
     }
   }
 
+
   // Patch REJECT LEAVE REQUEST - Từ chối đơn xin nghỉ phép (dành cho Manager)
-  Future<void> rejectLeaveRequest(String requestId, {String? reason}) async {
+  Future<LeaveRequestModel> rejectLeaveRequest(
+    String requestId, {
+    String? reason,
+  }) async {
     try {
-      await client.patch(
+      final response = await client.patch(
         ApiUrl.rejectLeaveRequest(requestId),
         data: reason != null ? {'rejectNote': reason} : null,
       );
-      _logger.i('[LeaveRequestRepository] Rejected leave request $requestId');
+
+      final data = response.data['data'] as Map<String, dynamic>;
+      return LeaveRequestModel.fromJson(data);
     } on DioException catch (e) {
       final message = _getErrorMessage(e);
       _logger.e('[LeaveRequestRepository] rejectLeaveRequest error: $message');
       throw Exception(message);
     }
   }
+
 
   // Helper: Extract error message from DioException
   String _getErrorMessage(DioException e) {

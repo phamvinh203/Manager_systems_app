@@ -16,8 +16,8 @@ class LeaveRequestBloc extends Bloc<LeaveRequestEvent, LeaveRequestState> {
     on<CancelLeaveRequestEvent>(_onCancelLeaveRequest);
     on<LoadAllLeaveRequestsEvent>(_onLoadAllLeaveRequests);
     on<LoadTeamLeaveRequestsEvent>(_onLoadTeamLeaveRequests);
-    // on<ApproveTeamLeaveRequestEvent>(_onApproveTeamLeaveRequest);
-    // on<RejectTeamLeaveRequestEvent>(_onRejectTeamLeaveRequest);
+    on<ApproveTeamLeaveRequestEvent>(_onApproveTeamLeaveRequest);
+    on<RejectTeamLeaveRequestEvent>(_onRejectTeamLeaveRequest);
   }
 
   // Load leave requests
@@ -226,4 +226,85 @@ class LeaveRequestBloc extends Bloc<LeaveRequestEvent, LeaveRequestState> {
       );
     }
   }
+
+  // Approve team leave request (Manager)
+  Future<void> _onApproveTeamLeaveRequest(
+    ApproveTeamLeaveRequestEvent event,
+    Emitter<LeaveRequestState> emit,
+  ) async {
+    emit(state.copyWith(status: LeaveRequestStatus.loading, clearError: true));
+
+    try {
+      final updatedRequest =
+          await leaveRequestRepository.approveLeaveRequest(event.requestId);
+
+      final updatedList = state.leaveRequests?.map((req) {
+        if (req.id == updatedRequest.id) {
+          return updatedRequest; //  replace item
+        }
+        return req;
+      }).toList();
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.loaded,
+          leaveRequests: updatedList,
+          successMessage: 'Đã phê duyệt đơn nghỉ phép',
+        ),
+      );
+
+      _logger.i('Approved leave request id=${event.requestId}');
+    } catch (e) {
+      _logger.e('Approve leave request error: $e');
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.error,
+          errorMessage: 'Failed to approve leave request',
+        ),
+      );
+    }
+  }
+
+  // Reject team leave request (Manager)
+  Future<void> _onRejectTeamLeaveRequest(
+    RejectTeamLeaveRequestEvent event,
+    Emitter<LeaveRequestState> emit,
+  ) async {
+    emit(state.copyWith(status: LeaveRequestStatus.loading, clearError: true));
+
+    try {
+      final updatedRequest =
+          await leaveRequestRepository.rejectLeaveRequest(
+        event.requestId,
+        reason: event.rejectNote,
+      );
+
+      final updatedList = state.leaveRequests?.map((req) {
+        if (req.id == updatedRequest.id) {
+          return updatedRequest; // 🔥 replace item
+        }
+        return req;
+      }).toList();
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.loaded,
+          leaveRequests: updatedList,
+          successMessage: 'Đã từ chối đơn nghỉ phép',
+        ),
+      );
+
+      _logger.i('Rejected leave request id=${event.requestId}');
+    } catch (e) {
+      _logger.e('Reject leave request error: $e');
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.error,
+          errorMessage: 'Failed to reject leave request',
+        ),
+      );
+    }
+  }
+
 }

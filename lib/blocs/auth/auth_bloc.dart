@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:mobile/core/storage/token_storage.dart';
 import 'package:mobile/repositories/auth_repository.dart';
 import 'auth_event.dart';
@@ -6,6 +7,7 @@ import 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
+  final Logger _logger = Logger();
 
   AuthBloc(this.authRepository) : super(AuthInitial()) {
     on<LoginRequested>(_onLogin);
@@ -20,7 +22,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // Token đã được lưu trong repository
       emit(AuthAuthenticated(user: auth.user, accessToken: auth.accessToken));
     } catch (e) {
-      emit(AuthFailure(e.toString()));
+      final message = e.toString().replaceAll('Exception: ', '');
+      _logger.e('Login error: $message');
+      emit(AuthFailure(message));
     }
   }
 
@@ -37,7 +41,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
       emit(AuthUnauthenticated());
     } catch (e) {
-      emit(AuthFailure("Register failed"));
+      final message = e.toString().replaceAll('Exception: ', '');
+      _logger.e('Register error: $message');
+      emit(AuthFailure(message));
     }
   }
 

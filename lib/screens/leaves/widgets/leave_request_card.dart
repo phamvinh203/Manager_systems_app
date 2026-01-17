@@ -163,13 +163,7 @@ class LeaveRequestCard extends StatelessWidget {
       children: [
         Expanded(
           child: OutlinedButton(
-            onPressed: () {
-              context.read<LeaveRequestBloc>().add(
-                RejectTeamLeaveRequestEvent(
-                  requestId: leaveRequest.id.toString(),
-                ),
-              );
-            },
+            onPressed: () => _showRejectDialog(context),
             style: OutlinedButton.styleFrom(
               foregroundColor: const Color(0xFFEB5757),
               side: const BorderSide(color: Color(0xFFEB5757)),
@@ -187,13 +181,7 @@ class LeaveRequestCard extends StatelessWidget {
         const SizedBox(width: 12),
         Expanded(
           child: ElevatedButton(
-            onPressed: () {
-              context.read<LeaveRequestBloc>().add(
-                ApproveTeamLeaveRequestEvent(
-                  requestId: leaveRequest.id.toString(),
-                ),
-              );
-            },
+            onPressed: () => _showApproveDialog(context),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF27AE60),
               foregroundColor: Colors.white,
@@ -210,6 +198,80 @@ class LeaveRequestCard extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showApproveDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Xác nhận phê duyệt'),
+        content: const Text(
+          'Bạn có chắc chắn muốn phê duyệt đơn nghỉ phép này không?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<LeaveRequestBloc>().add(
+                ApproveTeamLeaveRequestEvent(
+                  requestId: leaveRequest.id.toString(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF27AE60),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Phê duyệt'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showRejectDialog(BuildContext context) {
+    final controller = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Từ chối đơn nghỉ'),
+        content: TextField(
+          controller: controller,
+          maxLines: 3,
+          decoration: const InputDecoration(
+            hintText: 'Nhập lý do từ chối...',
+            border: OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx),
+            child: const Text('Hủy'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(ctx);
+              context.read<LeaveRequestBloc>().add(
+                RejectTeamLeaveRequestEvent(
+                  requestId: leaveRequest.id.toString(),
+                  rejectNote: controller.text.trim(),
+                ),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEB5757),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Từ chối'),
+          ),
+        ],
+      ),
     );
   }
 }
