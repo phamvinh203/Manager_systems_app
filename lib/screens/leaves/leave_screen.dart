@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/helper/isRole_helper.dart';
 
 import 'package:mobile/blocs/auth/auth_bloc.dart';
 import 'package:mobile/blocs/auth/auth_state.dart';
@@ -11,7 +12,6 @@ import 'package:mobile/screens/leaves/manager/TabManager.dart';
 
 import 'package:mobile/screens/leaves/widgets/button_leave.dart';
 import 'package:mobile/screens/leaves/widgets/list_leave_request.dart';
-
 
 import 'package:mobile/blocs/departments/departments_bloc.dart';
 import 'package:mobile/repositories/departments_repository.dart';
@@ -78,8 +78,7 @@ class _LeaveScreenState extends State<LeaveScreen> {
             body: Column(
               children: [
                 // Tabs for Manager or HR
-                if (currentUser != null &&
-                    (currentUser.isManager))
+                if (currentUser != null && (currentUser.isManager))
                   Tabmanager(
                     currentIndex: _currentTabIndex,
                     onTabChanged: (index) {

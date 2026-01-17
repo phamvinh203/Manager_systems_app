@@ -14,9 +14,4 @@ class User {
       role: json['role'],
     );
   }
-
-  bool get isAdmin => role == 'ADMIN';
-  bool get isHR => role == 'HR';
-  bool get isManager => role == 'MANAGER';
-  bool get isEmployee => role == 'EMPLOYEE';
 }

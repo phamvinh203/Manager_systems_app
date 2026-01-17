@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile/core/helper/isRole_helper.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/blocs/employee/employee_event.dart';
@@ -28,7 +29,11 @@ class EmployeeList extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.error_outline, size: 48, color: Colors.grey.shade400),
+                Icon(
+                  Icons.error_outline,
+                  size: 48,
+                  color: Colors.grey.shade400,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   state.errorMessage ?? 'Something went wrong',
@@ -37,7 +42,9 @@ class EmployeeList extends StatelessWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () {
-                    context.read<EmployeeBloc>().add(const RefreshEmployeesEvent());
+                    context.read<EmployeeBloc>().add(
+                      const RefreshEmployeesEvent(),
+                    );
                   },
                   child: const Text('Retry'),
                 ),
@@ -52,14 +59,15 @@ class EmployeeList extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.people_outline, size: 64, color: Colors.grey.shade300),
+                Icon(
+                  Icons.people_outline,
+                  size: 64,
+                  color: Colors.grey.shade300,
+                ),
                 const SizedBox(height: 16),
                 Text(
                   'No team members yet',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade500,
-                  ),
+                  style: TextStyle(fontSize: 16, color: Colors.grey.shade500),
                 ),
               ],
             ),
@@ -80,22 +88,28 @@ class EmployeeList extends StatelessWidget {
               return BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {
                   // Kiểm tra quyền: ADMIN và HR mới được xem chi tiết và mở menu
-                  final canManage = authState is AuthAuthenticated &&
+                  final canManage =
+                      authState is AuthAuthenticated &&
                       (authState.isAdmin || authState.isHR);
 
                   return EmployeeItem(
                     employee: employee,
-                    onTap: canManage ? () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => EmployeeDetailScreen(employee: employee),
-                        ),
-                      );
-                    } : null,
-                    onMenuPressed: canManage ? () {
-                      _showEmployeeOptions(context, employee);
-                    } : null,
+                    onTap: canManage
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    EmployeeDetailScreen(employee: employee),
+                              ),
+                            );
+                          }
+                        : null,
+                    onMenuPressed: canManage
+                        ? () {
+                            _showEmployeeOptions(context, employee);
+                          }
+                        : null,
                   );
                 },
               );
@@ -171,7 +185,9 @@ class EmployeeList extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.pop(ctx);
-              context.read<EmployeeBloc>().add(DeleteEmployeeEvent(employee.id));
+              context.read<EmployeeBloc>().add(
+                DeleteEmployeeEvent(employee.id),
+              );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),
             child: const Text('Delete'),

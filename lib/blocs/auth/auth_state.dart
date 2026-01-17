@@ -10,16 +10,9 @@ class AuthAuthenticated extends AuthState {
   final User user;
   final String accessToken;
 
-  AuthAuthenticated({
-    required this.user,
-    required this.accessToken,
-  });
+  AuthAuthenticated({required this.user, required this.accessToken});
 
   // Helper methods kiểm tra quyền
-  bool get isAdmin => user.role == 'ADMIN';
-  bool get isHR => user.role == 'HR';
-  bool get isManager => user.role == 'MANAGER';
-  bool get isEmployee => user.role == 'EMPLOYEE';
 
   bool hasAnyRole(List<String> roles) => roles.contains(user.role);
 }
