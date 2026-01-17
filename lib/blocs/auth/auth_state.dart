@@ -18,6 +18,7 @@ class AuthAuthenticated extends AuthState {
   // Helper methods kiểm tra quyền
   bool get isAdmin => user.role == 'ADMIN';
   bool get isHR => user.role == 'HR';
+  bool get isManager => user.role == 'MANAGER';
   bool get isEmployee => user.role == 'EMPLOYEE';
 
   bool hasAnyRole(List<String> roles) => roles.contains(user.role);

@@ -36,16 +36,16 @@ class LeaveRequestRepository {
       return LeaveRequestModel.fromJson(data['data']);
     } on DioException catch (e) {
       final message = _getErrorMessage(e);
-      _logger.e('[LeaveRequestRepository] Create leave request error: $message');
+      _logger.e(
+        '[LeaveRequestRepository] Create leave request error: $message',
+      );
       throw Exception(message);
     }
   }
 
   // GET MY LEAVE REQUESTS - Lấy danh sách đơn xin nghỉ của bản thân
-  Future<({List<LeaveRequestModel> leaveRequests, Pagination pagination})> getMyLeaveRequests({
-    required int page,
-    required int limit,
-  }) async {
+  Future<({List<LeaveRequestModel> leaveRequests, Pagination pagination})>
+  getMyLeaveRequests({required int page, required int limit}) async {
     try {
       final res = await client.get(
         ApiUrl.myLeaveRequests,
@@ -82,7 +82,9 @@ class LeaveRequestRepository {
       return LeaveRequestModel.fromJson(data['data']);
     } on DioException catch (e) {
       final message = _getErrorMessage(e);
-      _logger.e('[LeaveRequestRepository] getLeaveRequestDetail error: $message');
+      _logger.e(
+        '[LeaveRequestRepository] getLeaveRequestDetail error: $message',
+      );
       throw Exception(message);
     }
   }
@@ -95,6 +97,89 @@ class LeaveRequestRepository {
     } on DioException catch (e) {
       final message = _getErrorMessage(e);
       _logger.e('[LeaveRequestRepository] cancelLeaveRequest error: $message');
+      throw Exception(message);
+    }
+  }
+
+  // GET ALL LEAVE REQUESTS - Lấy tất cả đơn xin nghỉ phép (dành cho HR)
+  Future<({List<LeaveRequestModel> leaveRequests, Pagination pagination})>
+  getAllLeaveRequests({
+    required int page,
+    required int limit,
+    int? departmentId,
+  }) async {
+    try {
+      final res = await client.get(
+        ApiUrl.allLeaveRequests,
+        queryParameters: {
+          'page': page,
+          'limit': limit,
+          if (departmentId != null) 'departmentId': departmentId,
+        },
+      );
+
+      final data = res.data as Map<String, dynamic>;
+      return (
+        leaveRequests: (data['data'] as List)
+            .map((e) => LeaveRequestModel.fromJson(e))
+            .toList(),
+        pagination: Pagination.fromJson(data['pagination']),
+      );
+    } catch (e) {
+      _logger.e(
+        '[LeaveRequestRepository] getAllLeaveRequests error: ${e.toString()}',
+      );
+      throw Exception('Failed to load all leave requests');
+    }
+  }
+
+  // GET MANAGER TEAM LEAVE REQUESTS - Lấy đơn xin nghỉ phép của team (dành cho Manager)
+  Future<({List<LeaveRequestModel> leaveRequests, Pagination pagination})>
+  getTeamLeaveRequests({required int page, required int limit}) async {
+    try {
+      final res = await client.get(
+        ApiUrl.teamLeaveRequests,
+        queryParameters: {'page': page, 'limit': limit},
+      );
+
+      final data = res.data as Map<String, dynamic>;
+      return (
+        leaveRequests: (data['data'] as List)
+            .map((e) => LeaveRequestModel.fromJson(e))
+            .toList(),
+        pagination: Pagination.fromJson(data['pagination']),
+      );
+    } catch (e) {
+      _logger.e(
+        '[LeaveRequestRepository] getManagerTeamLeaveRequests error: ${e.toString()}',
+      );
+      throw Exception('Failed to load team leave requests');
+    }
+  }
+
+  // Patch APPROVE LEAVE REQUEST - Phê duyệt đơn xin nghỉ phép (dành cho Manager)
+  Future<void> approveLeaveRequest(String requestId) async {
+    try {
+      await client.patch(ApiUrl.approveLeaveRequest(requestId));
+      _logger.i('[LeaveRequestRepository] Approved leave request $requestId');
+    } on DioException catch (e) {
+      final message = _getErrorMessage(e);
+      _logger.e('[LeaveRequestRepository] approveLeaveRequest error: $message');
+      throw Exception(message);
+    }
+  }
+
+  // Patch REJECT LEAVE REQUEST - Từ chối đơn xin nghỉ phép (dành cho Manager)
+  Future<void> rejectLeaveRequest(String requestId, {String? reason}) async {
+    try {
+      await client.patch(
+        ApiUrl.rejectLeaveRequest(requestId),
+        data: reason != null ? {'rejectNote': reason} : null,
+      );
+      _logger.i('[LeaveRequestRepository] Rejected leave request $requestId');
+    } on DioException catch (e) {
+      final message = _getErrorMessage(e);
+      _logger.e('[LeaveRequestRepository] rejectLeaveRequest error: $message');
       throw Exception(message);
     }
   }

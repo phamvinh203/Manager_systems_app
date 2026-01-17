@@ -33,15 +33,15 @@ extension LeaveTypeX on LeaveType {
   IconData get icon {
     switch (this) {
       case LeaveType.annual:
-        return Icons.beach_access;
+        return Icons.calendar_today_rounded;
       case LeaveType.sick:
-        return Icons.local_hospital;
+        return Icons.medical_services_rounded;
       case LeaveType.unpaid:
-        return Icons.money_off;
+        return Icons.event_busy_rounded;
       case LeaveType.wfh:
-        return Icons.home_work;
+        return Icons.home_work_rounded;
       case LeaveType.other:
-        return Icons.more_horiz;
+        return Icons.more_time_rounded;
     }
   }
 
@@ -49,27 +49,30 @@ extension LeaveTypeX on LeaveType {
   Color get color {
     switch (this) {
       case LeaveType.annual:
-        return Colors.blue;
+        return const Color(0xFF2F80ED);
       case LeaveType.sick:
-        return Colors.red;
+        return const Color(0xFFEB5757);
       case LeaveType.unpaid:
-        return Colors.orange;
+        return const Color(0xFFF2994A);
       case LeaveType.wfh:
-        return Colors.green;
+        return const Color(0xFF27AE60);
       case LeaveType.other:
-        return Colors.grey;
+        return const Color(0xFF828282);
     }
   }
 
-  /// Widget icon container với background màu
-  Widget buildIconContainer({double size = 20}) {
+  /// Widget icon container với background màu (theo ảnh)
+  Widget buildIconContainer({double size = 24}) {
     return Container(
-      padding: const EdgeInsets.all(8),
+      width: 54,
+      height: 54,
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(icon, color: color, size: size),
+      child: Center(
+        child: Icon(icon, color: color, size: size),
+      ),
     );
   }
 }

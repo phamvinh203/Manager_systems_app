@@ -10,8 +10,7 @@ class ApiUrl {
   static const String employees = '${baseUrl}employees';
 
   // GET /api/employees/:userId - Lấy thông tin chi tiết của nhân viên theo userId khi login
-  static String getByUserId(int userId) =>
-      '${baseUrl}employees/$userId';
+  static String getByUserId(int userId) => '${baseUrl}employees/$userId';
 
   // POST /api/employees - Tạo nhân viên mới (Chỉ ADMIN và HR)
   static const String createEmployee = '${baseUrl}employees';
@@ -38,6 +37,15 @@ class ApiUrl {
   static const String myLeaveRequests = '${baseUrl}leave/requests/me';
   static const String myIdLeaveRequests = '${baseUrl}leave/requests';
   // hủy đơn nghỉ phép phía user khi đơn chưa được duyệt
-  static String cancelLeaveRequest(String requestId) =>
-      '${baseUrl}leave/requests/$requestId/cancel';
+  static String cancelLeaveRequest(String requestId) => '${baseUrl}leave/requests/$requestId/cancel';
+
+  
+  // manager endpoints
+  static const String teamLeaveRequests = '${baseUrl}leave/requests/team';
+  // manager phê duyệt hoặc từ chối đơn nghỉ phép
+  static String approveLeaveRequest(String requestId) => '${baseUrl}leave/requests/$requestId/approve';
+  static String rejectLeaveRequest(String requestId) => '${baseUrl}leave/requests/$requestId/reject';
+
+  // hr endpoints
+  static const String allLeaveRequests = '${baseUrl}leave/requests/all';
 }

@@ -17,6 +17,7 @@ class LeaveRequestModel {
   final DateTime createdAt;
   final DateTime updatedAt;
   final EmployeeBriefModel? employee;
+  final ApproverBriefModel? approver;
 
   LeaveRequestModel({
     required this.id,
@@ -34,6 +35,7 @@ class LeaveRequestModel {
     required this.createdAt,
     required this.updatedAt,
     this.employee,
+    this.approver,
   });
 
   factory LeaveRequestModel.fromJson(Map<String, dynamic> json) {
@@ -58,6 +60,9 @@ class LeaveRequestModel {
       updatedAt: DateTime.parse(json['updatedAt']),
       employee: json['employee'] != null
           ? EmployeeBriefModel.fromJson(json['employee'])
+          : null,
+      approver: json['approver'] != null
+          ? ApproverBriefModel.fromJson(json['approver'])
           : null,
     );
   }
@@ -85,6 +90,19 @@ class LeaveRequestModel {
               'code': employee!.code,
               'firstName': employee!.firstName,
               'lastName': employee!.lastName,
+              'department': employee!.department == null
+                  ? null
+                  : {
+                      'id': employee!.department!.id,
+                      'name': employee!.department!.name,
+                    },
+            },
+      'approver': approver == null
+          ? null
+          : {
+              'id': approver!.id,
+              'firstName': approver!.firstName,
+              'lastName': approver!.lastName,
             },
     };
   }
@@ -108,6 +126,7 @@ class LeaveRequestModel {
     DateTime? createdAt,
     DateTime? updatedAt,
     EmployeeBriefModel? employee,
+    ApproverBriefModel? approver,
   }) {
     return LeaveRequestModel(
       id: id ?? this.id,
@@ -125,6 +144,7 @@ class LeaveRequestModel {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       employee: employee ?? this.employee,
+      approver: approver ?? this.approver,
     );
   }
 
@@ -140,12 +160,16 @@ class EmployeeBriefModel {
   final String code;
   final String firstName;
   final String lastName;
+  final DepartmentBriefModel? department;
+  final PositionBriefModel? position;
 
   EmployeeBriefModel({
     required this.id,
     required this.code,
     required this.firstName,
     required this.lastName,
+    this.department,
+    this.position,
   });
 
   factory EmployeeBriefModel.fromJson(Map<String, dynamic> json) {
@@ -154,8 +178,64 @@ class EmployeeBriefModel {
       code: json['code'],
       firstName: json['firstName'],
       lastName: json['lastName'],
+      department: json['department'] != null
+          ? DepartmentBriefModel.fromJson(json['department'])
+          : null,
+      position: json['position'] != null
+          ? PositionBriefModel.fromJson(json['position'])
+          : null,
     );
   }
 
   String get fullName => '$firstName $lastName';
+  String get initials =>
+      '${firstName.isNotEmpty ? firstName[0] : ''}'
+      '${lastName.isNotEmpty ? lastName[0] : ''}';
+}
+
+class DepartmentBriefModel {
+  final int? id;
+  final String name;
+
+  DepartmentBriefModel({this.id, required this.name});
+
+  factory DepartmentBriefModel.fromJson(Map<String, dynamic> json) {
+    return DepartmentBriefModel(id: json['id'], name: json['name']);
+  }
+}
+
+class ApproverBriefModel {
+  final int id;
+  final String firstName;
+  final String lastName;
+
+  ApproverBriefModel({
+    required this.id,
+    required this.firstName,
+    required this.lastName,
+  });
+
+  factory ApproverBriefModel.fromJson(Map<String, dynamic> json) {
+    return ApproverBriefModel(
+      id: json['id'],
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+    );
+  }
+
+  String get fullName => '$firstName $lastName';
+  String get initials =>
+      '${firstName.isNotEmpty ? firstName[0] : ''}'
+      '${lastName.isNotEmpty ? lastName[0] : ''}';
+}
+
+class PositionBriefModel {
+  final int? id;
+  final String name;
+
+  PositionBriefModel({this.id, required this.name});
+
+  factory PositionBriefModel.fromJson(Map<String, dynamic> json) {
+    return PositionBriefModel(id: json['id'], name: json['name']);
+  }
 }

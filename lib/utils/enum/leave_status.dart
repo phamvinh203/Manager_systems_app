@@ -29,48 +29,41 @@ extension LeaveStatusX on LeaveStatus {
 
   bool get isPending => this == LeaveStatus.pending;
 
-  /// Lấy màu nền cho trạng thái
-  Color get backgroundColor {
+  /// Lấy màu chính cho trạng thái
+  Color get color {
     switch (this) {
       case LeaveStatus.pending:
-        return Colors.orange.shade100;
+        return const Color(0xFFF2994A); // Orange
       case LeaveStatus.approved:
-        return Colors.green.shade100;
+        return const Color(0xFF2F80ED); // Blue (matches image)
       case LeaveStatus.rejected:
-        return Colors.red.shade100;
+        return const Color(0xFFEB5757); // Red
       case LeaveStatus.cancelled:
-        return Colors.grey.shade200;
+        return const Color(0xFF828282); // Grey
     }
   }
 
-  /// Lấy màu chữ cho trạng thái
-  Color get textColor {
-    switch (this) {
-      case LeaveStatus.pending:
-        return Colors.orange.shade800;
-      case LeaveStatus.approved:
-        return Colors.green.shade800;
-      case LeaveStatus.rejected:
-        return Colors.red.shade800;
-      case LeaveStatus.cancelled:
-        return Colors.grey.shade700;
-    }
-  }
+  /// Lấy màu nền (nhạt) cho trạng thái
+  Color get backgroundColor => color.withOpacity(0.1);
 
-  /// Widget chip hiển thị trạng thái
+  /// Lấy màu chữ
+  Color get textColor => color;
+
+  /// Widget chip hiển thị trạng thái (Solid theo ảnh)
   Widget buildStatusChip() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
-        color: backgroundColor,
-        borderRadius: BorderRadius.circular(20),
+        color: color,
+        borderRadius: BorderRadius.circular(50),
       ),
       child: Text(
-        label,
-        style: TextStyle(
-          color: textColor,
-          fontWeight: FontWeight.w600,
-          fontSize: 12,
+        label, // Dùng label để hiển thị tiếng Việt
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 11,
+          letterSpacing: 0.5,
         ),
       ),
     );

@@ -1,27 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/leaves/leave_request_bloc.dart';
-import 'package:mobile/blocs/leaves/leave_request_event.dart';
 import 'package:mobile/blocs/leaves/leave_request_state.dart';
 import 'package:mobile/screens/leaves/widgets/leave_request_card.dart';
 
-class ListLeaveRequest extends StatefulWidget {
+class ListLeaveRequest extends StatelessWidget {
   const ListLeaveRequest({super.key});
-
-  @override
-  State<ListLeaveRequest> createState() => _ListLeaveRequestState();
-}
-
-class _ListLeaveRequestState extends State<ListLeaveRequest> {
-  @override
-  void initState() {
-    super.initState();
-    _loadLeaveRequests();
-  }
-
-  void _loadLeaveRequests() {
-    context.read<LeaveRequestBloc>().add(const LoadLeaveRequestsEvent());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,14 +20,11 @@ class _ListLeaveRequestState extends State<ListLeaveRequest> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
                 Text(
                   state.errorMessage ?? 'Đã xảy ra lỗi',
                   style: const TextStyle(color: Colors.red),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _loadLeaveRequests,
-                  child: const Text('Thử lại'),
                 ),
               ],
             ),
@@ -68,17 +49,14 @@ class _ListLeaveRequestState extends State<ListLeaveRequest> {
           );
         }
 
-        return RefreshIndicator(
-          onRefresh: () async => _loadLeaveRequests(),
-          child: ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: leaveRequests.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              final request = leaveRequests[index];
-              return LeaveRequestCard(leaveRequest: request);
-            },
-          ),
+        return ListView.separated(
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
+          itemCount: leaveRequests.length,
+          separatorBuilder: (_, __) => const SizedBox(height: 0),
+          itemBuilder: (context, index) {
+            final request = leaveRequests[index];
+            return LeaveRequestCard(leaveRequest: request);
+          },
         );
       },
     );

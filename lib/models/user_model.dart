@@ -4,12 +4,7 @@ class User {
   final String email;
   final String? role;
 
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-    this.role,
-  });
+  User({required this.id, required this.name, required this.email, this.role});
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
@@ -19,4 +14,9 @@ class User {
       role: json['role'],
     );
   }
+
+  bool get isAdmin => role == 'ADMIN';
+  bool get isHR => role == 'HR';
+  bool get isManager => role == 'MANAGER';
+  bool get isEmployee => role == 'EMPLOYEE';
 }

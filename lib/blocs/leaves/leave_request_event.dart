@@ -11,10 +11,15 @@ abstract class LeaveRequestEvent extends Equatable {
 class LoadLeaveRequestsEvent extends LeaveRequestEvent {
   final int page;
   final int limit;
+  final int? departmentId;
 
-  const LoadLeaveRequestsEvent({this.page = 1, this.limit = 10});
+  const LoadLeaveRequestsEvent({
+    this.page = 1,
+    this.limit = 10,
+    this.departmentId,
+  });
   @override
-  List<Object?> get props => [page, limit];
+  List<Object?> get props => [page, limit, departmentId];
 }
 
 // tạo đơn
@@ -53,4 +58,52 @@ class CancelLeaveRequestEvent extends LeaveRequestEvent {
 
   @override
   List<Object?> get props => [requestId];
+}
+
+// Load all leave requests (for HR/Manager)
+class LoadAllLeaveRequestsEvent extends LeaveRequestEvent {
+  final int page;
+  final int limit;
+  final int? departmentId;
+
+  const LoadAllLeaveRequestsEvent({
+    this.page = 1,
+    this.limit = 10,
+    this.departmentId,
+  });
+
+  @override
+  List<Object?> get props => [page, limit, departmentId];
+}
+
+// Load manager's team leave requests
+class LoadTeamLeaveRequestsEvent extends LeaveRequestEvent {
+  final int page;
+  final int limit;
+
+  const LoadTeamLeaveRequestsEvent({this.page = 1, this.limit = 10});
+
+  @override
+  List<Object?> get props => [page, limit];
+}
+
+// Phê duyệt đơn (Manager)
+class ApproveTeamLeaveRequestEvent extends LeaveRequestEvent {
+  final String requestId;
+
+  const ApproveTeamLeaveRequestEvent({required this.requestId});
+
+  @override
+  List<Object?> get props => [requestId];
+}
+
+// Từ chối đơn (Manager)
+class RejectTeamLeaveRequestEvent extends LeaveRequestEvent {
+  final String requestId;
+  final String? rejectNote;
+
+  const RejectTeamLeaveRequestEvent({required this.requestId, this.rejectNote});
+
+  @override
+  List<Object?> get props => [requestId, rejectNote];
 }

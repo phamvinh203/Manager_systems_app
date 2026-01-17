@@ -14,6 +14,10 @@ class LeaveRequestBloc extends Bloc<LeaveRequestEvent, LeaveRequestState> {
     on<CreateLeaveRequestEvent>(_onCreateLeaveRequest);
     on<LeaveRequestDetailEvent>(_onLeaveRequestDetail);
     on<CancelLeaveRequestEvent>(_onCancelLeaveRequest);
+    on<LoadAllLeaveRequestsEvent>(_onLoadAllLeaveRequests);
+    on<LoadTeamLeaveRequestsEvent>(_onLoadTeamLeaveRequests);
+    // on<ApproveTeamLeaveRequestEvent>(_onApproveTeamLeaveRequest);
+    // on<RejectTeamLeaveRequestEvent>(_onRejectTeamLeaveRequest);
   }
 
   // Load leave requests
@@ -143,6 +147,81 @@ class LeaveRequestBloc extends Bloc<LeaveRequestEvent, LeaveRequestState> {
         state.copyWith(
           status: LeaveRequestStatus.error,
           errorMessage: 'Failed to cancel leave request',
+        ),
+      );
+    }
+  }
+
+  // Load all leave requests (for HR/Manager)
+  Future<void> _onLoadAllLeaveRequests(
+    LoadAllLeaveRequestsEvent event,
+    Emitter<LeaveRequestState> emit,
+  ) async {
+    emit(state.copyWith(status: LeaveRequestStatus.loading, clearError: true));
+
+    try {
+      final response = await leaveRequestRepository.getAllLeaveRequests(
+        page: event.page,
+        limit: event.limit,
+        departmentId: event.departmentId,
+      );
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.loaded,
+          leaveRequests: response.leaveRequests,
+          pagination: response.pagination,
+        ),
+      );
+
+      _logger.i(
+        'Loaded ALL leave requests '
+        '(page=${event.page}, departmentId=${event.departmentId})',
+      );
+    } catch (e) {
+      _logger.e('Load all leave requests error: $e');
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.error,
+          errorMessage: 'Failed to load all leave requests',
+        ),
+      );
+    }
+  }
+
+  // Load manager's team leave requests
+  Future<void> _onLoadTeamLeaveRequests(
+    LoadTeamLeaveRequestsEvent event,
+    Emitter<LeaveRequestState> emit,
+  ) async {
+    emit(state.copyWith(status: LeaveRequestStatus.loading, clearError: true));
+
+    try {
+      final response = await leaveRequestRepository.getTeamLeaveRequests(
+        page: event.page,
+        limit: event.limit,
+      );
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.loaded,
+          leaveRequests: response.leaveRequests,
+          pagination: response.pagination,
+        ),
+      );
+
+      _logger.i(
+        'Loaded TEAM leave requests '
+        '(page=${event.page})',
+      );
+    } catch (e) {
+      _logger.e('Load team leave requests error: $e');
+
+      emit(
+        state.copyWith(
+          status: LeaveRequestStatus.error,
+          errorMessage: 'Failed to load team leave requests',
         ),
       );
     }
