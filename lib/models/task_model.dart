@@ -13,7 +13,9 @@ class TaskModel {
   final DateTime? startDate;
   final DateTime? dueDate;
   final int? employeeId;
+  final int? assignedCount;
   final DepartmentModel? department;
+  final List<TaskAssigneeModel>? assignees;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -27,7 +29,9 @@ class TaskModel {
     this.startDate,
     this.dueDate,
     this.employeeId,
+    this.assignedCount,
     this.department,
+    this.assignees,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -45,8 +49,26 @@ class TaskModel {
           : null,
       dueDate: json['dueDate'] != null ? DateTime.parse(json['dueDate']) : null,
       employeeId: json['employeeId'],
+      assignedCount:
+          json['assignedCount'] ??
+          json['assignedEmployeesCount'] ??
+          json['_count']?['employees'] ??
+          json['_count']?['taskAssignees'],
       department: json['department'] != null
           ? DepartmentModel.fromJson(json['department'])
+          : null,
+      assignees:
+          (json['assignees'] ??
+                  json['taskAssignees'] ??
+                  json['employees'] ??
+                  json['assignedEmployees'])
+              is List
+          ? (json['assignees'] ??
+                    json['taskAssignees'] ??
+                    json['employees'] ??
+                    json['assignedEmployees'] as List)
+                .map((e) => TaskAssigneeModel.fromJson(e))
+                .toList()
           : null,
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
@@ -77,7 +99,9 @@ class TaskModel {
     DateTime? startDate,
     DateTime? dueDate,
     int? employeeId,
+    int? assignedCount,
     DepartmentModel? department,
+    List<TaskAssigneeModel>? assignees,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
@@ -91,7 +115,9 @@ class TaskModel {
       startDate: startDate ?? this.startDate,
       dueDate: dueDate ?? this.dueDate,
       employeeId: employeeId ?? this.employeeId,
+      assignedCount: assignedCount ?? this.assignedCount,
       department: department ?? this.department,
+      assignees: assignees ?? this.assignees,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -112,16 +138,78 @@ class DepartmentModel {
   DepartmentModel({required this.id, required this.name});
 
   factory DepartmentModel.fromJson(Map<String, dynamic> json) {
-    return DepartmentModel(
-      id: json['id'],
-      name: json['name'],
+    return DepartmentModel(id: json['id'], name: json['name']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
+  }
+}
+
+// Model cho thông tin nhân viên được gán task
+class TaskAssigneeModel {
+  final int employeeId;
+  final String code;
+  final String fullName;
+  final PositionBriefModel? position;
+  final String status;
+  final int progress;
+  final DateTime assignedAt;
+  final DateTime? completedAt;
+
+  TaskAssigneeModel({
+    required this.employeeId,
+    required this.code,
+    required this.fullName,
+    this.position,
+    required this.status,
+    required this.progress,
+    required this.assignedAt,
+    this.completedAt,
+  });
+
+  factory TaskAssigneeModel.fromJson(Map<String, dynamic> json) {
+    return TaskAssigneeModel(
+      employeeId: json['employeeId'],
+      code: json['code'],
+      fullName: json['fullName'],
+      position: json['position'] != null
+          ? PositionBriefModel.fromJson(json['position'])
+          : null,
+      status: json['status'],
+      progress: json['progress'] ?? 0,
+      assignedAt: DateTime.parse(json['assignedAt']),
+      completedAt: json['completedAt'] != null
+          ? DateTime.parse(json['completedAt'])
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
+      'employeeId': employeeId,
+      'code': code,
+      'fullName': fullName,
+      'position': position?.toJson(),
+      'status': status,
+      'progress': progress,
+      'assignedAt': assignedAt.toIso8601String(),
+      'completedAt': completedAt?.toIso8601String(),
     };
+  }
+}
+
+class PositionBriefModel {
+  final int id;
+  final String name;
+
+  PositionBriefModel({required this.id, required this.name});
+
+  factory PositionBriefModel.fromJson(Map<String, dynamic> json) {
+    return PositionBriefModel(id: json['id'], name: json['name']);
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'id': id, 'name': name};
   }
 }

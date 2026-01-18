@@ -166,22 +166,22 @@ class _AdminTaskPageState extends State<AdminTaskPage> {
                   DepartmentSelector(
                     selectedDepartment: _selectedDepartment,
                     onDepartmentChanged: (dept) {
-                      setState(() {
+                                setState(() {
                         _selectedDepartment = dept;
-                      });
-                      _filterTasks();
-                    },
-                  ),
+                                });
+                                _filterTasks();
+                              },
+                            ),
                   const SizedBox(height: 16),
                   // Status Tab Bar
                   TaskStatusTabBar(
                     selectedStatus: _selectedStatus,
                     onStatusChanged: (status) {
-                      setState(() {
+                                setState(() {
                         _selectedStatus = status;
-                      });
-                      _filterTasks();
-                    },
+                                });
+                                _filterTasks();
+                              },
                   ),
                 ],
               ),
@@ -216,6 +216,11 @@ class _AdminTaskPageState extends State<AdminTaskPage> {
                     onTaskEdit: _handleTaskEdit,
                     onTaskDelete: _handleTaskDelete,
                     emptyMessage: _getEmptyMessage(),
+                    currentPage: state.pagination?.page,
+                    totalPages: state.pagination?.totalPages,
+                    onPageChanged: (page) {
+                      context.read<TaskBloc>().add(LoadTasksEvent(page: page));
+                    },
                   );
                 },
               ),

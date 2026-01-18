@@ -14,10 +14,6 @@ class PaginationWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (totalPages <= 1) {
-      return const SizedBox.shrink();
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
@@ -76,14 +72,8 @@ class PaginationWidget extends StatelessWidget {
       child: Container(
         width: 36,
         height: 36,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          icon,
-          size: 20,
-          color: Colors.grey[700],
-        ),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
+        child: Icon(icon, size: 20, color: Colors.grey[700]),
       ),
     );
   }

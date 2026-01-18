@@ -19,13 +19,39 @@ class EmployeeHelpers {
       'Sales': const Color(0xFF8B5CF6),
       'Operations': const Color(0xFFEF4444),
     };
-    return colors[departmentName] ?? const Color(0xFF64748B);
+
+    if (colors.containsKey(departmentName)) {
+      return colors[departmentName]!;
+    }
+
+    // Generate a deterministic "random" color from a palette
+    final List<Color> palette = [
+      const Color(0xFF6366F1), 
+      const Color(0xFF8B5CF6), 
+      const Color(0xFFD946EF), 
+      const Color(0xFFF43F5E), 
+      const Color(0xFFF97316), 
+      const Color(0xFFEAB308), 
+      const Color(0xFF22C55E), 
+      const Color(0xFF06B6D4), 
+      const Color(0xFF3B82F6), 
+      const Color(0xFF64748B), 
+    ];
+
+    return palette[departmentName.hashCode.abs() % palette.length];
   }
 
   static String getInitials(String firstName, String lastName) {
     final f = firstName.isNotEmpty ? firstName[0] : '';
     final l = lastName.isNotEmpty ? lastName[0] : '';
     return '$f$l'.toUpperCase();
+  }
+
+  static String getNameInitials(String fullName) {
+    if (fullName.isEmpty) return 'U';
+    final parts = fullName.trim().split(' ');
+    if (parts.length == 1) return parts[0][0].toUpperCase();
+    return getInitials(parts.first, parts.last);
   }
 }
 

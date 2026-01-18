@@ -9,6 +9,7 @@ class DepartmentsBloc extends Bloc<DepartmentsEvent, DepartmentsState> {
 
   DepartmentsBloc({required this.repository}) : super(DepartmentsInitial()) {
     on<LoadDepartments>(_onLoadDepartments);
+    on<LoadEmployeesByDepartment>(_onLoadEmployeesByDepartment);
   }
 
   Future<void> _onLoadDepartments(
@@ -19,6 +20,19 @@ class DepartmentsBloc extends Bloc<DepartmentsEvent, DepartmentsState> {
     try {
       final departments = await repository.getDepartments();
       emit(DepartmentsLoaded(departments));
+    } catch (e) {
+      emit(DepartmentsError(e.toString()));
+    }
+  }
+
+  Future<void> _onLoadEmployeesByDepartment(
+    LoadEmployeesByDepartment event,
+    Emitter<DepartmentsState> emit,
+  ) async {
+    emit(EmployeesByDepartmentLoading());
+    try {
+      final employees = await repository.getEmployeesByDepartment(event.departmentId);
+      emit(EmployeesByDepartmentLoaded(employees, event.departmentId));
     } catch (e) {
       emit(DepartmentsError(e.toString()));
     }

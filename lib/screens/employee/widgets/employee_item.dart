@@ -16,9 +16,7 @@ class EmployeeItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get initials from first and last name
-    final String initials = '${employee.firstName[0]}${employee.lastName[0]}'
-        .toUpperCase();
+    final String initials = EmployeeHelpers.getNameInitials(employee.fullName);
 
     return InkWell(
       onTap: onTap,
@@ -33,7 +31,7 @@ class EmployeeItem extends StatelessWidget {
               height: 50,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: EmployeeHelpers.getAvatarColor(employee.departmentName),
+                color: EmployeeHelpers.getAvatarColor(employee.fullName),
                 border: Border.all(color: const Color(0xFFE2E8F0), width: 2),
               ),
               child: Center(

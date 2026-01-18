@@ -3,14 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
-import 'package:mobile/blocs/employee/employee_state.dart';
 import 'package:mobile/blocs/employee/employee_event.dart';
 import 'package:mobile/screens/widgets/role_based_widget.dart';
 import 'widgets/employee_search_bar.dart';
 import 'widgets/employee_list.dart';
 import 'widgets/add_member_button.dart';
 import 'add_employee.dart';
-import '../widgets/pagination_widget.dart';
 
 class EmployeeScreen extends StatefulWidget {
   const EmployeeScreen({super.key});
@@ -53,9 +51,9 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
                 onChanged: (query) {
                   _debounce?.cancel();
                   _debounce = Timer(const Duration(milliseconds: 500), () {
-                    context
-                        .read<EmployeeBloc>()
-                        .add(SearchEmployeesEvent(query));
+                    context.read<EmployeeBloc>().add(
+                      SearchEmployeesEvent(query),
+                    );
                   });
                 },
               ),
@@ -65,38 +63,19 @@ class _EmployeeScreenState extends State<EmployeeScreen> {
             // Employee list
             const Expanded(child: EmployeeList()),
 
-            // Pagination
-            BlocBuilder<EmployeeBloc, EmployeeState>(
-              builder: (context, state) {
-                if (state.pagination == null) {
-                  return const SizedBox.shrink();
-                }
-
-                return PaginationWidget(
-                  currentPage: state.pagination!.page,
-                  totalPages: state.pagination!.totalPages,
-                  onPageChanged: (page) {
-                    context
-                    .read<EmployeeBloc>()
-                    .add(GoToPageEvent(page));
-                  },
-                );
-              },
-            ),
-
             // Add member button - chỉ ADMIN và HR mới thấy
             RoleBasedWidget(
               allowedRoles: const ['ADMIN', 'HR'],
               child: AddMemberButton(
-                onPressed: () async{
+                onPressed: () async {
                   await Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (_) => const AddEmployeeScreen()),
+                    MaterialPageRoute(
+                      builder: (_) => const AddEmployeeScreen(),
+                    ),
                   );
 
-                  context
-                      .read<EmployeeBloc>()
-                      .add(const LoadEmployeesEvent());
+                  context.read<EmployeeBloc>().add(const LoadEmployeesEvent());
                 },
               ),
             ),

@@ -22,4 +22,20 @@ class DepartmentsRepository {
       throw Exception('Failed to load departments: $e');
     }
   }
+
+  // get employees by department
+  Future<List<DepartmentEmployee>> getEmployeesByDepartment(int departmentId) async {
+    try {
+      final res = await client.get(ApiUrl.getEmployeesByDepartment(departmentId));
+
+      final data = res.data as Map<String, dynamic>;
+      final employees = (data['data'] as List)
+          .map((e) => DepartmentEmployee.fromJson(e))
+          .toList();
+
+      return employees;
+    } catch (e) {
+      throw Exception('Failed to load employees by department: $e');
+    }
+  }
 }

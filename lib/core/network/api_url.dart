@@ -23,6 +23,9 @@ class ApiUrl {
 
   // department endpoints
   static const String getDepartments = '${baseUrl}departments';
+  // departments/:departmentId/employees - Lấy danh sách nhân viên theo phòng ban
+  static String getEmployeesByDepartment(int departmentId) => '${baseUrl}departments/$departmentId/employees';
+
   // positions endpoints
   static const String getPositions = '${baseUrl}positions';
 
@@ -61,4 +64,11 @@ class ApiUrl {
   // DELETE /api/tasks/:taskId - Xóa task
   static String deleteTask(int taskId) => '${baseUrl}tasks/$taskId';
 
+  // task assignment endpoints
+  // PUT /api/tasks/:taskId/assign - Gán task cho nhân viên
+  static String assignTask(int taskId) => '${baseUrl}tasks/$taskId/assign';
+  // DELETE /api/tasks/:taskId/unassign/:employeeId - Bỏ gán task cho nhân viên
+  static String unassignTask(int taskId, int employeeId) => '${baseUrl}tasks/$taskId/unassign/$employeeId';
+  // GET /api/tasks/:taskId/assignees - Lấy danh sách nhân viên được gán task
+  static String getTaskAssignees(int taskId) => '${baseUrl}tasks/$taskId/assignees';
 }

@@ -28,7 +28,7 @@ class HomeHeader extends StatelessWidget {
           height: 50,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: EmployeeHelpers.getAvatarColor(department),
+            color: EmployeeHelpers.getAvatarColor(fullName),
             border: Border.all(color: const Color(0xFFE2E8F0), width: 2),
           ),
           child: Center(

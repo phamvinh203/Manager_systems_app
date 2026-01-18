@@ -10,6 +10,7 @@ class TaskState extends Equatable {
   final List<TaskModel>? tasks;
   final Pagination? pagination;
   final TaskModel? currentTask;
+  final List<TaskAssigneeModel>? assignees;
 
   final String? successMessage;
   final String? errorMessage;
@@ -19,6 +20,7 @@ class TaskState extends Equatable {
     this.tasks = const [],
     this.pagination,
     this.currentTask,
+    this.assignees,
     this.successMessage,
     this.errorMessage,
   });
@@ -32,6 +34,7 @@ class TaskState extends Equatable {
     List<TaskModel>? tasks,
     Pagination? pagination,
     TaskModel? currentTask,
+    List<TaskAssigneeModel>? assignees,
     String? successMessage,
     String? errorMessage,
     bool clearError = false,
@@ -43,6 +46,7 @@ class TaskState extends Equatable {
       tasks: tasks ?? this.tasks,
       pagination: clearPagination ? null : (pagination ?? this.pagination),
       currentTask: currentTask ?? this.currentTask,
+      assignees: assignees ?? this.assignees,
       successMessage: clearSuccess
           ? null
           : (successMessage ?? this.successMessage),
@@ -62,6 +66,7 @@ class TaskState extends Equatable {
         tasks,
         pagination,
         currentTask,
+        assignees,
         successMessage,
         errorMessage,
       ];

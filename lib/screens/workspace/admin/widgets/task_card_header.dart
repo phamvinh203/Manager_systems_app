@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mobile/models/task_model.dart';
 
@@ -39,8 +38,7 @@ class TaskCardHeader extends StatelessWidget {
             ),
             const SizedBox(width: 4),
             Text(
-              // '$employeeCount nhân sự',
-              '0 nhân sự',
+              '${(task.assignees != null && task.assignees!.isNotEmpty) ? task.assignees!.length : (task.assignedCount ?? 0)} nhân sự',
               style: const TextStyle(
                 color: Color(0xFF6E7175),
                 fontSize: 14,
