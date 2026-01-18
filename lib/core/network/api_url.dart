@@ -48,4 +48,17 @@ class ApiUrl {
 
   // hr endpoints
   static const String allLeaveRequests = '${baseUrl}leave/requests/all';
+
+  // CRUD tạo task
+  // POST /api/tasks - Tạo task mới
+  static const String createTask = '${baseUrl}tasks';
+  // GET /api/tasks - Lấy danh sách task
+  static const String getTasks = '${baseUrl}tasks';
+  // GET /api/tasks/:taskId - Lấy chi tiết task
+  static String getTaskById(int taskId) => '${baseUrl}tasks/$taskId';
+  // PUT /api/tasks/:taskId - Cập nhật task
+  static String updateTask(int taskId) => '${baseUrl}tasks/$taskId';
+  // DELETE /api/tasks/:taskId - Xóa task
+  static String deleteTask(int taskId) => '${baseUrl}tasks/$taskId';
+
 }

@@ -5,15 +5,17 @@ import 'package:mobile/blocs/attendance/attendance_bloc.dart';
 import 'package:mobile/blocs/departments/departments_bloc.dart';
 import 'package:mobile/blocs/employee/employee_bloc.dart';
 import 'package:mobile/blocs/positions/positions_bloc.dart';
+import 'package:mobile/blocs/task/task_bloc.dart';
 import 'package:mobile/core/services/notification_service.dart';
 import 'package:mobile/repositories/auth_repository.dart';
 import 'package:mobile/repositories/attendance_repository.dart';
 import 'package:mobile/repositories/departments_repository.dart';
 import 'package:mobile/repositories/employee_repository.dart';
 import 'package:mobile/repositories/positions_repository.dart';
+import 'package:mobile/repositories/task_repository.dart';
 import 'package:mobile/screens/auth/login_screen.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await NotificationService().initialize();
@@ -32,6 +34,7 @@ class MyApp extends StatelessWidget {
         RepositoryProvider(create: (_) => AttendanceRepository()),
         RepositoryProvider(create: (_) => DepartmentsRepository()),
         RepositoryProvider(create: (_) => PositionsRepository()),
+        RepositoryProvider(create: (_) => TaskRepository()),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -39,10 +42,12 @@ class MyApp extends StatelessWidget {
             create: (context) => AuthBloc(context.read<AuthRepository>()),
           ),
           BlocProvider(
-            create: (context) => EmployeeBloc(context.read<EmployeeRepository>()),
+            create: (context) =>
+                EmployeeBloc(context.read<EmployeeRepository>()),
           ),
           BlocProvider(
-            create: (context) => AttendanceBloc(context.read<AttendanceRepository>()),
+            create: (context) =>
+                AttendanceBloc(context.read<AttendanceRepository>()),
           ),
           BlocProvider(
             create: (context) => DepartmentsBloc(
@@ -50,9 +55,11 @@ class MyApp extends StatelessWidget {
             ),
           ),
           BlocProvider(
-            create: (context) => PositionsBloc(
-              repository: context.read<PositionsRepository>(),
-            ),
+            create: (context) =>
+                PositionsBloc(repository: context.read<PositionsRepository>()),
+          ),
+          BlocProvider(
+            create: (context) => TaskBloc(context.read<TaskRepository>()),
           ),
         ],
         child: MaterialApp(
@@ -68,4 +75,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

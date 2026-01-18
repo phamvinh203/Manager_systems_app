@@ -22,36 +22,37 @@ class Department {
       id: json['id'] ?? 0,
       name: json['name'] ?? '',
       managerId: json['managerId'],
-      createdAt: json['createdAt'] != null 
-          ? DateTime.parse(json['createdAt']) 
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'])
           : null,
-      updatedAt: json['updatedAt'] != null 
-          ? DateTime.parse(json['updatedAt']) 
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.parse(json['updatedAt'])
           : null,
       manager: json['manager'],
-      count: json['_count'] != null 
-          ? DepartmentCount.fromJson(json['_count']) 
+      count: json['_count'] != null
+          ? DepartmentCount.fromJson(json['_count'])
           : null,
     );
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'managerId': managerId,
-    };
+    return {'id': id, 'name': name, 'managerId': managerId};
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Department && runtimeType == other.runtimeType && id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
 }
 
 class DepartmentCount {
   final int employees;
   final int positions;
 
-  const DepartmentCount({
-    required this.employees,
-    required this.positions,
-  });
+  const DepartmentCount({required this.employees, required this.positions});
 
   factory DepartmentCount.fromJson(Map<String, dynamic> json) {
     return DepartmentCount(
