@@ -11,6 +11,14 @@ class DepartmentsLoaded extends DepartmentsState {
   DepartmentsLoaded(this.departments);
 }
 
+class EmployeesByDepartmentLoading extends DepartmentsState {}
+
+class EmployeesByDepartmentLoaded extends DepartmentsState {
+  final List<DepartmentEmployee> employees;
+  final int departmentId;
+  EmployeesByDepartmentLoaded(this.employees, this.departmentId);
+}
+
 class DepartmentsError extends DepartmentsState {
   final String message;
   DepartmentsError(this.message);

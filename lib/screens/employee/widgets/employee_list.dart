@@ -7,6 +7,7 @@ import 'package:mobile/blocs/employee/employee_event.dart';
 import 'package:mobile/blocs/auth/auth_bloc.dart';
 import 'package:mobile/blocs/auth/auth_state.dart';
 import 'package:mobile/models/employee_model.dart';
+import 'package:mobile/screens/widgets/pagination_widget.dart';
 import 'employee_item.dart';
 import '../employee_detail.dart';
 import '../edit_employee.dart';
@@ -81,9 +82,25 @@ class EmployeeList extends StatelessWidget {
           },
           child: ListView.separated(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            itemCount: state.employees.length,
-            separatorBuilder: (_, __) => const Divider(height: 1),
+            itemCount:
+                state.employees.length + (state.pagination != null ? 1 : 0),
+            separatorBuilder: (_, index) {
+              if (index < state.employees.length - 1) {
+                return const Divider(height: 1);
+              }
+              return const SizedBox.shrink();
+            },
             itemBuilder: (context, index) {
+              if (index == state.employees.length) {
+                return PaginationWidget(
+                  currentPage: state.pagination!.page,
+                  totalPages: state.pagination!.totalPages,
+                  onPageChanged: (page) {
+                    context.read<EmployeeBloc>().add(GoToPageEvent(page));
+                  },
+                );
+              }
+
               final employee = state.employees[index];
               return BlocBuilder<AuthBloc, AuthState>(
                 builder: (context, authState) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile/utils/employee_helpers.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/blocs/leaves/leave_request_bloc.dart';
 import 'package:mobile/blocs/leaves/leave_request_event.dart';
@@ -103,13 +104,13 @@ class LeaveRequestCard extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: 18,
-          backgroundColor: const Color(0xFF2F80ED).withOpacity(0.1),
+          backgroundColor: EmployeeHelpers.getAvatarColor(employee.fullName),
           child: Text(
             employee.initials,
             style: const TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF2F80ED),
+              color: Colors.white,
             ),
           ),
         ),

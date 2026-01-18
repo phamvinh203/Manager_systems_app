@@ -8,3 +8,12 @@ abstract class DepartmentsEvent extends Equatable {
 }
 
 class LoadDepartments extends DepartmentsEvent {}
+
+class LoadEmployeesByDepartment extends DepartmentsEvent {
+  final int departmentId;
+
+  const LoadEmployeesByDepartment(this.departmentId);
+
+  @override
+  List<Object?> get props => [departmentId];
+}

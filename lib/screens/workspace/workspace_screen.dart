@@ -4,6 +4,7 @@ import 'package:mobile/blocs/auth/auth_bloc.dart';
 import 'package:mobile/blocs/auth/auth_state.dart';
 import 'package:mobile/core/helper/isRole_helper.dart';
 import 'package:mobile/screens/workspace/admin/admin_task_page.dart';
+import 'package:mobile/screens/workspace/manager/manager_task_page.dart';
 import 'package:mobile/screens/workspace/widgets/create_task_fab.dart';
 
 class WorkspaceScreen extends StatelessWidget {
@@ -14,8 +15,12 @@ class WorkspaceScreen extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, authState) {
         // Check if user is ADMIN, HR, or MANAGER
-        if (authState.isAdmin || authState.isHR || authState.isManager) {
+        if (authState.isAdmin || authState.isHR) {
           return const AdminTaskPage();
+        }
+
+        if (authState.isManager) {
+          return const ManagerTaskPage();
         }
 
         // Default workspace screen for other roles

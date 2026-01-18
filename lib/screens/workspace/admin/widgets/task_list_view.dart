@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/models/task_model.dart';
+import 'package:mobile/screens/widgets/pagination_widget.dart';
 import 'package:mobile/screens/workspace/admin/widgets/task_card.dart';
 
 class TaskListView extends StatelessWidget {
@@ -9,6 +10,9 @@ class TaskListView extends StatelessWidget {
   final Function(TaskModel task)? onTaskDelete;
   final bool isLoading;
   final String? emptyMessage;
+  final int? currentPage;
+  final int? totalPages;
+  final Function(int)? onPageChanged;
 
   const TaskListView({
     super.key,
@@ -18,14 +22,15 @@ class TaskListView extends StatelessWidget {
     this.onTaskDelete,
     this.isLoading = false,
     this.emptyMessage,
+    this.currentPage,
+    this.totalPages,
+    this.onPageChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     if (tasks.isEmpty) {
@@ -53,14 +58,23 @@ class TaskListView extends StatelessWidget {
 
     return ListView.builder(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      itemCount: tasks.length,
+      itemCount: tasks.length + (totalPages != null ? 1 : 0),
       itemBuilder: (context, index) {
+        if (index == tasks.length) {
+          return PaginationWidget(
+            currentPage: currentPage ?? 1,
+            totalPages: totalPages ?? 1,
+            onPageChanged: onPageChanged ?? (_) {},
+          );
+        }
         final task = tasks[index];
         return TaskCard(
           task: task,
           onTap: onTaskTap != null ? () => onTaskTap?.call(task) : null,
           onEdit: onTaskEdit != null ? () => onTaskEdit?.call(task) : null,
-          onDelete: onTaskDelete != null ? () => onTaskDelete?.call(task) : null,
+          onDelete: onTaskDelete != null
+              ? () => onTaskDelete?.call(task)
+              : null,
         );
       },
     );

@@ -99,3 +99,41 @@ class DeleteTaskEvent extends TaskEvent {
   @override
   List<Object?> get props => [taskId];
 }
+
+// Gán task cho nhân viên
+class AssignTaskEvent extends TaskEvent {
+  final int taskId;
+  final List<int> employeeIds;
+
+  const AssignTaskEvent({
+    required this.taskId,
+    required this.employeeIds,
+  });
+
+  @override
+  List<Object?> get props => [taskId, employeeIds];
+}
+
+// Lấy danh sách nhân viên được gán task
+class LoadTaskAssigneesEvent extends TaskEvent {
+  final int taskId;
+
+  const LoadTaskAssigneesEvent({required this.taskId});
+
+  @override
+  List<Object?> get props => [taskId];
+}
+
+// Bỏ gán task cho nhân viên
+class UnassignTaskEvent extends TaskEvent {
+  final int taskId;
+  final int employeeId;
+
+  const UnassignTaskEvent({
+    required this.taskId,
+    required this.employeeId,
+  });
+
+  @override
+  List<Object?> get props => [taskId, employeeId];
+}

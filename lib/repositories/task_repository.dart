@@ -138,6 +138,61 @@ class TaskRepository {
     }
   }
 
+  // ASSIGN TASK - Gán task cho nhiều nhân viên
+  Future<Map<String, dynamic>> assignTask({
+    required int taskId,
+    required List<int> employeeIds,
+  }) async {
+    try {
+      final res = await client.put(
+        ApiUrl.assignTask(taskId),
+        data: {
+          'employeeIds': employeeIds,
+        },
+      );
+
+      _logger.i('[TaskRepository] Assign task success');
+      return res.data['data'] as Map<String, dynamic>;
+    } on DioException catch (e) {
+      final message = _getErrorMessage(e);
+      _logger.e('[TaskRepository] Assign task error: $message');
+      throw Exception(message);
+    }
+  }
+
+  // GET TASK ASSIGNEES - Lấy danh sách nhân viên được gán task
+  Future<List<TaskAssigneeModel>> getTaskAssignees(int taskId) async {
+    try {
+      final res = await client.get(ApiUrl.getTaskAssignees(taskId));
+
+      final assignees = (res.data['data'] as List)
+          .map((e) => TaskAssigneeModel.fromJson(e))
+          .toList();
+
+      _logger.i('[TaskRepository] Get task assignees success: ${assignees.length}');
+      return assignees;
+    } on DioException catch (e) {
+      final message = _getErrorMessage(e);
+      _logger.e('[TaskRepository] Get task assignees error: $message');
+      throw Exception(message);
+    }
+  }
+
+  // UNASSIGN TASK - Bỏ gán task cho nhân viên
+  Future<void> unassignTask({
+    required int taskId,
+    required int employeeId,
+  }) async {
+    try {
+      await client.delete(ApiUrl.unassignTask(taskId, employeeId));
+      _logger.i('[TaskRepository] Unassign task success');
+    } on DioException catch (e) {
+      final message = _getErrorMessage(e);
+      _logger.e('[TaskRepository] Unassign task error: $message');
+      throw Exception(message);
+    }
+  }
+
   // HELPER
   String _getErrorMessage(DioException e) {
     if (e.response?.data != null && e.response?.data is Map) {

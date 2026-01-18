@@ -14,6 +14,9 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<LoadTaskDetailEvent>(_onLoadTaskDetail);
     on<UpdateTaskEvent>(_onUpdateTask);
     on<DeleteTaskEvent>(_onDeleteTask);
+    on<AssignTaskEvent>(_onAssignTask);
+    on<LoadTaskAssigneesEvent>(_onLoadTaskAssignees);
+    on<UnassignTaskEvent>(_onUnassignTask);
   }
 
   // LOAD TASKS
@@ -29,10 +32,22 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         limit: event.limit,
       );
 
+      // Fetch assignees for each task to ensure they show up on cards
+      final tasksWithAssignees = await Future.wait(
+        response.tasks.map((t) async {
+          try {
+            final assignees = await taskRepository.getTaskAssignees(t.id);
+            return t.copyWith(assignees: assignees);
+          } catch (_) {
+            return t;
+          }
+        }),
+      );
+
       emit(
         state.copyWith(
           status: BlocTaskStatus.loaded,
-          tasks: response.tasks,
+          tasks: tasksWithAssignees,
           pagination: response.pagination,
         ),
       );
@@ -183,6 +198,120 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         state.copyWith(
           status: BlocTaskStatus.error,
           errorMessage: 'Xóa công việc thất bại',
+        ),
+      );
+    }
+  }
+
+  // ASSIGN TASK
+  Future<void> _onAssignTask(
+    AssignTaskEvent event,
+    Emitter<TaskState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocTaskStatus.loading, clearError: true));
+
+    try {
+      final result = await taskRepository.assignTask(
+        taskId: event.taskId,
+        employeeIds: event.employeeIds,
+      );
+
+      // Fetch full assignees detail to update names on cards
+      final assignees = await taskRepository.getTaskAssignees(event.taskId);
+
+      final updatedTasks = state.tasks?.map((t) {
+        if (t.id == event.taskId) {
+          return t.copyWith(
+            assignedCount: result['assignedCount'] ?? assignees.length,
+            assignees: assignees,
+          );
+        }
+        return t;
+      }).toList();
+
+      emit(
+        state.copyWith(
+          status: BlocTaskStatus.success,
+          tasks: updatedTasks,
+          successMessage:
+              'Đã gán công việc cho ${result['assignedCount'] ?? assignees.length} nhân viên',
+        ),
+      );
+
+      _logger.i(
+        'Assigned task id=${event.taskId} to ${event.employeeIds.length} employees',
+      );
+    } catch (e) {
+      _logger.e('Assign task error: $e');
+      emit(
+        state.copyWith(
+          status: BlocTaskStatus.error,
+          errorMessage: 'Gán công việc thất bại',
+        ),
+      );
+    }
+  }
+
+  // LOAD TASK ASSIGNEES
+  Future<void> _onLoadTaskAssignees(
+    LoadTaskAssigneesEvent event,
+    Emitter<TaskState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocTaskStatus.loading, clearError: true));
+
+    try {
+      final assignees = await taskRepository.getTaskAssignees(event.taskId);
+
+      emit(state.copyWith(status: BlocTaskStatus.loaded, assignees: assignees));
+
+      _logger.i(
+        'Loaded ${assignees.length} assignees for task id=${event.taskId}',
+      );
+    } catch (e) {
+      _logger.e('Load task assignees error: $e');
+      emit(
+        state.copyWith(
+          status: BlocTaskStatus.error,
+          errorMessage: 'Không thể tải danh sách nhân viên được gán',
+        ),
+      );
+    }
+  }
+
+  // UNASSIGN TASK
+  Future<void> _onUnassignTask(
+    UnassignTaskEvent event,
+    Emitter<TaskState> emit,
+  ) async {
+    emit(state.copyWith(status: BlocTaskStatus.loading, clearError: true));
+
+    try {
+      await taskRepository.unassignTask(
+        taskId: event.taskId,
+        employeeId: event.employeeId,
+      );
+
+      final updatedAssignees = state.assignees
+          ?.where((a) => a.employeeId != event.employeeId)
+          .toList();
+
+      emit(
+        state.copyWith(
+          status: BlocTaskStatus.success,
+          assignees: updatedAssignees,
+          successMessage: 'Đã bỏ gán nhân viên khỏi công việc',
+        ),
+      );
+
+      _logger.i(
+        'Unassigned employee id=${event.employeeId} from task id=${event.taskId}',
+      );
+    } catch (e) {
+      _logger.e('Unassign task error: $e');
+      emit(
+        state.copyWith(
+          status: BlocTaskStatus.error,
+          errorMessage: 'Bỏ gán công việc thất bại',
         ),
       );
     }
