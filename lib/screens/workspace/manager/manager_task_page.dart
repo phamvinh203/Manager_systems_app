@@ -42,7 +42,7 @@ class _ManagerTaskPageState extends State<ManagerTaskPage> {
   void _handleTaskTap(TaskModel task) async {
     await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TaskDetailPage(task: task)),
+      MaterialPageRoute(builder: (context) => TaskDetailPage(taskId: task.id)),
     );
     // Reload tasks after returning from detail
     if (mounted) {
@@ -61,9 +61,21 @@ class _ManagerTaskPageState extends State<ManagerTaskPage> {
     }
   }
 
-  void _handleSearchTap() {
-    // TODO: Implement search functionality
-    showSearch(context: context, delegate: _TaskSearchDelegate());
+  void _handleSearchTap() {}
+
+  String _resolveDepartmentName({
+    required AuthState authState,
+    required List<TaskModel> tasks,
+  }) {
+    if (authState is! AuthAuthenticated) return 'Phòng ban';
+
+    final user = authState.user;
+
+    if (user.role != 'MANAGER') return 'Phòng ban';
+
+    if (tasks.isEmpty) return 'Phòng ban';
+
+    return tasks.first.department?.name ?? 'Phòng ban';
   }
 
   @override
@@ -115,14 +127,12 @@ class _ManagerTaskPageState extends State<ManagerTaskPage> {
                           : null;
 
                       return ManagerHeader(
-                        departmentName: user?.role == 'MANAGER'
-                            ? (tasks.isNotEmpty
-                                  ? (tasks.first.department?.name ??
-                                        'Phòng ban')
-                                  : 'Phòng ban')
-                            : 'Phòng ban',
+                        departmentName: _resolveDepartmentName(
+                          authState: authState,
+                          tasks: tasks,
+                        ),
                         userName: user?.name ?? 'User',
-                        userAvatar: null, // TODO: Get from user avatar
+                        userAvatar: null,
                         onSearchTap: _handleSearchTap,
                         onAvatarTap: () {
                           // TODO: Navigate to profile
@@ -177,41 +187,5 @@ class _ManagerTaskPageState extends State<ManagerTaskPage> {
       return 'Không có công việc ${_selectedStatus!.label.toLowerCase()}';
     }
     return 'Không có công việc nào';
-  }
-}
-
-class _TaskSearchDelegate extends SearchDelegate<String> {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, '');
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    // TODO: Implement search results
-    return const Center(child: Text('Tìm kiếm công việc'));
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // TODO: Implement search suggestions
-    return const Center(child: Text('Nhập để tìm kiếm công việc'));
   }
 }
