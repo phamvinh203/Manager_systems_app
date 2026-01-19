@@ -44,7 +44,7 @@ class _AdminTaskPageState extends State<AdminTaskPage> {
   void _handleTaskTap(TaskModel task) async {
     final result = await Navigator.push<String>(
       context,
-      MaterialPageRoute(builder: (context) => TaskDetailPage(task: task)),
+      MaterialPageRoute(builder: (context) => TaskDetailPage(taskId: task.id)),
     );
 
     // If user clicked edit from detail page, navigate to update
