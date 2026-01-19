@@ -71,4 +71,6 @@ class ApiUrl {
   static String unassignTask(int taskId, int employeeId) => '${baseUrl}tasks/$taskId/unassign/$employeeId';
   // GET /api/tasks/:taskId/assignees - Lấy danh sách nhân viên được gán task
   static String getTaskAssignees(int taskId) => '${baseUrl}tasks/$taskId/assignees';
+  // GET /api/tasks/department/:departmentId - lấy task của phòng ban
+  static String getTasksByDepartment(int departmentId) => '${baseUrl}tasks/department/$departmentId';
 }

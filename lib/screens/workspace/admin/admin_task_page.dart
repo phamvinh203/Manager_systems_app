@@ -11,7 +11,7 @@ import 'package:mobile/screens/workspace/widgets/create_task_fab.dart';
 import 'package:mobile/screens/workspace/admin/widgets/department_selector.dart';
 import 'package:mobile/screens/workspace/admin/widgets/task_status_tab_bar.dart';
 import 'package:mobile/screens/workspace/admin/widgets/task_list_view.dart';
-import 'package:mobile/screens/workspace/widgets/task_detail.dart';
+import 'package:mobile/screens/workspace/task_detail.dart';
 import 'package:mobile/screens/workspace/widgets/update_task.dart';
 import 'package:mobile/utils/task/task_status.dart';
 import 'package:mobile/utils/snackbar_utils.dart';
